@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblGuiaSalida index{% endblock %}
+
+{% block body %}
+    <h1>TblGuiaSalida index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdGuiaSalida</th>
+                <th>NumSerie</th>
+                <th>Numeracion</th>
+                <th>FechaSalida</th>
+                <th>FechaLlegada</th>
+                <th>Transportista</th>
+                <th>Licencia</th>
+                <th>Cantidad</th>
+                <th>PuntoLlegada</th>
+                <th>IdAtendido</th>
+                <th>Estado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tbl_guia_salida in tbl_guia_salidas %}
+            <tr>
+                <td>{{ tbl_guia_salida.idGuiaSalida }}</td>
+                <td>{{ tbl_guia_salida.numSerie }}</td>
+                <td>{{ tbl_guia_salida.numeracion }}</td>
+                <td>{{ tbl_guia_salida.fechaSalida ? tbl_guia_salida.fechaSalida|date('Y-m-d') : '' }}</td>
+                <td>{{ tbl_guia_salida.fechaLlegada ? tbl_guia_salida.fechaLlegada|date('Y-m-d') : '' }}</td>
+                <td>{{ tbl_guia_salida.transportista }}</td>
+                <td>{{ tbl_guia_salida.licencia }}</td>
+                <td>{{ tbl_guia_salida.cantidad }}</td>
+                <td>{{ tbl_guia_salida.puntoLlegada }}</td>
+                <td>{{ tbl_guia_salida.idAtendido }}</td>
+                <td>{{ tbl_guia_salida.estado }}</td>
+                <td>
+                    <a href="{{ path('tbl_guia_salida_show', {'idGuiaSalida': tbl_guia_salida.idGuiaSalida}) }}">show</a>
+                    <a href="{{ path('tbl_guia_salida_edit', {'idGuiaSalida': tbl_guia_salida.idGuiaSalida}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_guia_salida_new') }}">Create new</a>
+{% endblock %}

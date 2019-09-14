@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblNotaCredito index{% endblock %}
+
+{% block body %}
+    <h1>TblNotaCredito index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdNotaCredito</th>
+                <th>Fecha</th>
+                <th>Motivo</th>
+                <th>NumSerie</th>
+                <th>Numeracion</th>
+                <th>Subtotal</th>
+                <th>Igv</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tbl_nota_credito in tbl_nota_creditos %}
+            <tr>
+                <td>{{ tbl_nota_credito.idNotaCredito }}</td>
+                <td>{{ tbl_nota_credito.fecha ? tbl_nota_credito.fecha|date('Y-m-d') : '' }}</td>
+                <td>{{ tbl_nota_credito.motivo }}</td>
+                <td>{{ tbl_nota_credito.numSerie }}</td>
+                <td>{{ tbl_nota_credito.numeracion }}</td>
+                <td>{{ tbl_nota_credito.subtotal }}</td>
+                <td>{{ tbl_nota_credito.igv }}</td>
+                <td>{{ tbl_nota_credito.total }}</td>
+                <td>{{ tbl_nota_credito.estado }}</td>
+                <td>
+                    <a href="{{ path('tbl_nota_credito_show', {'idNotaCredito': tbl_nota_credito.idNotaCredito}) }}">show</a>
+                    <a href="{{ path('tbl_nota_credito_edit', {'idNotaCredito': tbl_nota_credito.idNotaCredito}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_nota_credito_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TblAtendido{% endblock %}
+
+{% block body %}
+    <h1>Create new TblAtendido</h1>
+
+    {{ include('tbl_atendido/_form.html.twig') }}
+
+    <a href="{{ path('tbl_atendido_index') }}">back to list</a>
+{% endblock %}

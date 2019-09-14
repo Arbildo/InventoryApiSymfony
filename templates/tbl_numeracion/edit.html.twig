@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TblNumeracion{% endblock %}
+
+{% block body %}
+    <h1>Edit TblNumeracion</h1>
+
+    {{ include('tbl_numeracion/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('tbl_numeracion_index') }}">back to list</a>
+
+    {{ include('tbl_numeracion/_delete_form.html.twig') }}
+{% endblock %}

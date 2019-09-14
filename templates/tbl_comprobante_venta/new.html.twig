@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TblComprobanteVenta{% endblock %}
+
+{% block body %}
+    <h1>Create new TblComprobanteVenta</h1>
+
+    {{ include('tbl_comprobante_venta/_form.html.twig') }}
+
+    <a href="{{ path('tbl_comprobante_venta_index') }}">back to list</a>
+{% endblock %}

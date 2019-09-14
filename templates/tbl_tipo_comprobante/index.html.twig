@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblTipoComprobante index{% endblock %}
+
+{% block body %}
+    <h1>TblTipoComprobante index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdTipoComprobante</th>
+                <th>NombreTipo</th>
+                <th>Estado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tbl_tipo_comprobante in tbl_tipo_comprobantes %}
+            <tr>
+                <td>{{ tbl_tipo_comprobante.idTipoComprobante }}</td>
+                <td>{{ tbl_tipo_comprobante.nombreTipo }}</td>
+                <td>{{ tbl_tipo_comprobante.estado }}</td>
+                <td>
+                    <a href="{{ path('tbl_tipo_comprobante_show', {'idTipoComprobante': tbl_tipo_comprobante.idTipoComprobante}) }}">show</a>
+                    <a href="{{ path('tbl_tipo_comprobante_edit', {'idTipoComprobante': tbl_tipo_comprobante.idTipoComprobante}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_tipo_comprobante_new') }}">Create new</a>
+{% endblock %}

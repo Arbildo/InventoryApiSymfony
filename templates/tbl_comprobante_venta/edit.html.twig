@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TblComprobanteVenta{% endblock %}
+
+{% block body %}
+    <h1>Edit TblComprobanteVenta</h1>
+
+    {{ include('tbl_comprobante_venta/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('tbl_comprobante_venta_index') }}">back to list</a>
+
+    {{ include('tbl_comprobante_venta/_delete_form.html.twig') }}
+{% endblock %}

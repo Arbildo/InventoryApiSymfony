@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblProductoDetalle{% endblock %}
+
+{% block body %}
+    <h1>TblProductoDetalle</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdProductoDetalle</th>
+                <td>{{ tbl_producto_detalle.idProductoDetalle }}</td>
+            </tr>
+            <tr>
+                <th>StockInicial</th>
+                <td>{{ tbl_producto_detalle.stockInicial }}</td>
+            </tr>
+            <tr>
+                <th>StockMinimo</th>
+                <td>{{ tbl_producto_detalle.stockMinimo }}</td>
+            </tr>
+            <tr>
+                <th>Precio</th>
+                <td>{{ tbl_producto_detalle.precio }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ tbl_producto_detalle.estado }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_producto_detalle_index') }}">back to list</a>
+
+    <a href="{{ path('tbl_producto_detalle_edit', {'idProductoDetalle': tbl_producto_detalle.idProductoDetalle}) }}">edit</a>
+
+    {{ include('tbl_producto_detalle/_delete_form.html.twig') }}
+{% endblock %}

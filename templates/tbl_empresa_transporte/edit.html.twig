@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TblEmpresaTransporte{% endblock %}
+
+{% block body %}
+    <h1>Edit TblEmpresaTransporte</h1>
+
+    {{ include('tbl_empresa_transporte/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('tbl_empresa_transporte_index') }}">back to list</a>
+
+    {{ include('tbl_empresa_transporte/_delete_form.html.twig') }}
+{% endblock %}

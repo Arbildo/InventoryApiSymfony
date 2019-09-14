@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TblTipoDocumento{% endblock %}
+
+{% block body %}
+    <h1>Create new TblTipoDocumento</h1>
+
+    {{ include('tbl_tipo_documento/_form.html.twig') }}
+
+    <a href="{{ path('tbl_tipo_documento_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblComprobanteVenta{% endblock %}
+
+{% block body %}
+    <h1>TblComprobanteVenta</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdComprobanteVenta</th>
+                <td>{{ tbl_comprobante_ventum.idComprobanteVenta }}</td>
+            </tr>
+            <tr>
+                <th>TipoVenta</th>
+                <td>{{ tbl_comprobante_ventum.tipoVenta }}</td>
+            </tr>
+            <tr>
+                <th>Fecha</th>
+                <td>{{ tbl_comprobante_ventum.fecha ? tbl_comprobante_ventum.fecha|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Serie</th>
+                <td>{{ tbl_comprobante_ventum.serie }}</td>
+            </tr>
+            <tr>
+                <th>Numeracion</th>
+                <td>{{ tbl_comprobante_ventum.numeracion }}</td>
+            </tr>
+            <tr>
+                <th>Subtotal</th>
+                <td>{{ tbl_comprobante_ventum.subtotal }}</td>
+            </tr>
+            <tr>
+                <th>Dsct</th>
+                <td>{{ tbl_comprobante_ventum.dsct }}</td>
+            </tr>
+            <tr>
+                <th>Igv</th>
+                <td>{{ tbl_comprobante_ventum.igv }}</td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <td>{{ tbl_comprobante_ventum.total }}</td>
+            </tr>
+            <tr>
+                <th>Cantidad</th>
+                <td>{{ tbl_comprobante_ventum.cantidad }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ tbl_comprobante_ventum.estado }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_comprobante_venta_index') }}">back to list</a>
+
+    <a href="{{ path('tbl_comprobante_venta_edit', {'idComprobanteVenta': tbl_comprobante_ventum.idComprobanteVenta}) }}">edit</a>
+
+    {{ include('tbl_comprobante_venta/_delete_form.html.twig') }}
+{% endblock %}

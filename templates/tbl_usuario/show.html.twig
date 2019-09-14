@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblUsuario{% endblock %}
+
+{% block body %}
+    <h1>TblUsuario</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdUsuario</th>
+                <td>{{ tbl_usuario.idUsuario }}</td>
+            </tr>
+            <tr>
+                <th>Codigo</th>
+                <td>{{ tbl_usuario.codigo }}</td>
+            </tr>
+            <tr>
+                <th>Nombres</th>
+                <td>{{ tbl_usuario.nombres }}</td>
+            </tr>
+            <tr>
+                <th>Apellidos</th>
+                <td>{{ tbl_usuario.apellidos }}</td>
+            </tr>
+            <tr>
+                <th>Usuario</th>
+                <td>{{ tbl_usuario.usuario }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ tbl_usuario.password }}</td>
+            </tr>
+            <tr>
+                <th>Correo</th>
+                <td>{{ tbl_usuario.correo }}</td>
+            </tr>
+            <tr>
+                <th>Foto</th>
+                <td>{{ tbl_usuario.foto }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ tbl_usuario.estado }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_usuario_index') }}">back to list</a>
+
+    <a href="{{ path('tbl_usuario_edit', {'idUsuario': tbl_usuario.idUsuario}) }}">edit</a>
+
+    {{ include('tbl_usuario/_delete_form.html.twig') }}
+{% endblock %}

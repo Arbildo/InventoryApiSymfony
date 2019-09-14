@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblPerdida index{% endblock %}
+
+{% block body %}
+    <h1>TblPerdida index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdPerdida</th>
+                <th>Codigo</th>
+                <th>Fecha</th>
+                <th>Cantidad</th>
+                <th>Descripcion</th>
+                <th>Estado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tbl_perdida in tbl_perdidas %}
+            <tr>
+                <td>{{ tbl_perdida.idPerdida }}</td>
+                <td>{{ tbl_perdida.codigo }}</td>
+                <td>{{ tbl_perdida.fecha ? tbl_perdida.fecha|date('Y-m-d') : '' }}</td>
+                <td>{{ tbl_perdida.cantidad }}</td>
+                <td>{{ tbl_perdida.descripcion }}</td>
+                <td>{{ tbl_perdida.estado }}</td>
+                <td>
+                    <a href="{{ path('tbl_perdida_show', {'idPerdida': tbl_perdida.idPerdida}) }}">show</a>
+                    <a href="{{ path('tbl_perdida_edit', {'idPerdida': tbl_perdida.idPerdida}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_perdida_new') }}">Create new</a>
+{% endblock %}

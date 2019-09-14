@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TblDetalleNotaCredito{% endblock %}
+
+{% block body %}
+    <h1>Create new TblDetalleNotaCredito</h1>
+
+    {{ include('tbl_detalle_nota_credito/_form.html.twig') }}
+
+    <a href="{{ path('tbl_detalle_nota_credito_index') }}">back to list</a>
+{% endblock %}

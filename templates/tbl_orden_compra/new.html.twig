@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TblOrdenCompra{% endblock %}
+
+{% block body %}
+    <h1>Create new TblOrdenCompra</h1>
+
+    {{ include('tbl_orden_compra/_form.html.twig') }}
+
+    <a href="{{ path('tbl_orden_compra_index') }}">back to list</a>
+{% endblock %}

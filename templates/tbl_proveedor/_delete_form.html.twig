@@ -1,0 +1,5 @@
+<form method="post" action="{{ path('tbl_proveedor_delete', {'idProveedor': tbl_proveedor.idProveedor}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tbl_proveedor.idProveedor) }}">
+    <button class="btn">Delete</button>
+</form>

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TblUnidadTransporte{% endblock %}
+
+{% block body %}
+    <h1>Create new TblUnidadTransporte</h1>
+
+    {{ include('tbl_unidad_transporte/_form.html.twig') }}
+
+    <a href="{{ path('tbl_unidad_transporte_index') }}">back to list</a>
+{% endblock %}

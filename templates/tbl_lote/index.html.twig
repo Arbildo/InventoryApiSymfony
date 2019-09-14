@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblLote index{% endblock %}
+
+{% block body %}
+    <h1>TblLote index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdLote</th>
+                <th>Nombre</th>
+                <th>FechaVencimiento</th>
+                <th>Estado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tbl_lote in tbl_lotes %}
+            <tr>
+                <td>{{ tbl_lote.idLote }}</td>
+                <td>{{ tbl_lote.nombre }}</td>
+                <td>{{ tbl_lote.fechaVencimiento ? tbl_lote.fechaVencimiento|date('Y-m-d') : '' }}</td>
+                <td>{{ tbl_lote.estado }}</td>
+                <td>
+                    <a href="{{ path('tbl_lote_show', {'idLote': tbl_lote.idLote}) }}">show</a>
+                    <a href="{{ path('tbl_lote_edit', {'idLote': tbl_lote.idLote}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_lote_new') }}">Create new</a>
+{% endblock %}

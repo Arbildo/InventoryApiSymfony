@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblNumeracion index{% endblock %}
+
+{% block body %}
+    <h1>TblNumeracion index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdNumeracion</th>
+                <th>Serie</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Estado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tbl_numeracion in tbl_numeracions %}
+            <tr>
+                <td>{{ tbl_numeracion.idNumeracion }}</td>
+                <td>{{ tbl_numeracion.serie }}</td>
+                <td>{{ tbl_numeracion.inicio }}</td>
+                <td>{{ tbl_numeracion.fin }}</td>
+                <td>{{ tbl_numeracion.estado }}</td>
+                <td>
+                    <a href="{{ path('tbl_numeracion_show', {'idNumeracion': tbl_numeracion.idNumeracion}) }}">show</a>
+                    <a href="{{ path('tbl_numeracion_edit', {'idNumeracion': tbl_numeracion.idNumeracion}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_numeracion_new') }}">Create new</a>
+{% endblock %}

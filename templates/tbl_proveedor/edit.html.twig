@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TblProveedor{% endblock %}
+
+{% block body %}
+    <h1>Edit TblProveedor</h1>
+
+    {{ include('tbl_proveedor/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('tbl_proveedor_index') }}">back to list</a>
+
+    {{ include('tbl_proveedor/_delete_form.html.twig') }}
+{% endblock %}

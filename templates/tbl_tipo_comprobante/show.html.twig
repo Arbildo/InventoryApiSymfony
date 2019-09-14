@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblTipoComprobante{% endblock %}
+
+{% block body %}
+    <h1>TblTipoComprobante</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdTipoComprobante</th>
+                <td>{{ tbl_tipo_comprobante.idTipoComprobante }}</td>
+            </tr>
+            <tr>
+                <th>NombreTipo</th>
+                <td>{{ tbl_tipo_comprobante.nombreTipo }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ tbl_tipo_comprobante.estado }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_tipo_comprobante_index') }}">back to list</a>
+
+    <a href="{{ path('tbl_tipo_comprobante_edit', {'idTipoComprobante': tbl_tipo_comprobante.idTipoComprobante}) }}">edit</a>
+
+    {{ include('tbl_tipo_comprobante/_delete_form.html.twig') }}
+{% endblock %}

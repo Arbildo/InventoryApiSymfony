@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblProveedor{% endblock %}
+
+{% block body %}
+    <h1>TblProveedor</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdProveedor</th>
+                <td>{{ tbl_proveedor.idProveedor }}</td>
+            </tr>
+            <tr>
+                <th>Codigo</th>
+                <td>{{ tbl_proveedor.codigo }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ tbl_proveedor.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Ruc</th>
+                <td>{{ tbl_proveedor.ruc }}</td>
+            </tr>
+            <tr>
+                <th>Telefono</th>
+                <td>{{ tbl_proveedor.telefono }}</td>
+            </tr>
+            <tr>
+                <th>Celular</th>
+                <td>{{ tbl_proveedor.celular }}</td>
+            </tr>
+            <tr>
+                <th>Web</th>
+                <td>{{ tbl_proveedor.web }}</td>
+            </tr>
+            <tr>
+                <th>Contacto</th>
+                <td>{{ tbl_proveedor.contacto }}</td>
+            </tr>
+            <tr>
+                <th>TelefContacto</th>
+                <td>{{ tbl_proveedor.telefContacto }}</td>
+            </tr>
+            <tr>
+                <th>Direccion</th>
+                <td>{{ tbl_proveedor.direccion }}</td>
+            </tr>
+            <tr>
+                <th>Correo</th>
+                <td>{{ tbl_proveedor.correo }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ tbl_proveedor.estado }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_proveedor_index') }}">back to list</a>
+
+    <a href="{{ path('tbl_proveedor_edit', {'idProveedor': tbl_proveedor.idProveedor}) }}">edit</a>
+
+    {{ include('tbl_proveedor/_delete_form.html.twig') }}
+{% endblock %}

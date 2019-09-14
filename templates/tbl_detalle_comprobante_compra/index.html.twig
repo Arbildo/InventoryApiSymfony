@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblDetalleComprobanteCompra index{% endblock %}
+
+{% block body %}
+    <h1>TblDetalleComprobanteCompra index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdDetalleComprobanteCompra</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tbl_detalle_comprobante_compra in tbl_detalle_comprobante_compras %}
+            <tr>
+                <td>{{ tbl_detalle_comprobante_compra.idDetalleComprobanteCompra }}</td>
+                <td>{{ tbl_detalle_comprobante_compra.cantidad }}</td>
+                <td>{{ tbl_detalle_comprobante_compra.precio }}</td>
+                <td>{{ tbl_detalle_comprobante_compra.estado }}</td>
+                <td>
+                    <a href="{{ path('tbl_detalle_comprobante_compra_show', {'idDetalleComprobanteCompra': tbl_detalle_comprobante_compra.idDetalleComprobanteCompra}) }}">show</a>
+                    <a href="{{ path('tbl_detalle_comprobante_compra_edit', {'idDetalleComprobanteCompra': tbl_detalle_comprobante_compra.idDetalleComprobanteCompra}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_detalle_comprobante_compra_new') }}">Create new</a>
+{% endblock %}

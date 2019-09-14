@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblUnidadTransporte{% endblock %}
+
+{% block body %}
+    <h1>TblUnidadTransporte</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdUnidad</th>
+                <td>{{ tbl_unidad_transporte.idUnidad }}</td>
+            </tr>
+            <tr>
+                <th>NumPlaca</th>
+                <td>{{ tbl_unidad_transporte.numPlaca }}</td>
+            </tr>
+            <tr>
+                <th>Marca</th>
+                <td>{{ tbl_unidad_transporte.marca }}</td>
+            </tr>
+            <tr>
+                <th>Licencia</th>
+                <td>{{ tbl_unidad_transporte.licencia }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ tbl_unidad_transporte.estado }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_unidad_transporte_index') }}">back to list</a>
+
+    <a href="{{ path('tbl_unidad_transporte_edit', {'idUnidad': tbl_unidad_transporte.idUnidad}) }}">edit</a>
+
+    {{ include('tbl_unidad_transporte/_delete_form.html.twig') }}
+{% endblock %}

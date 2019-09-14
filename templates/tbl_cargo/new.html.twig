@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TblCargo{% endblock %}
+
+{% block body %}
+    <h1>Create new TblCargo</h1>
+
+    {{ include('tbl_cargo/_form.html.twig') }}
+
+    <a href="{{ path('tbl_cargo_index') }}">back to list</a>
+{% endblock %}

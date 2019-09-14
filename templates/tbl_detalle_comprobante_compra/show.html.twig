@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblDetalleComprobanteCompra{% endblock %}
+
+{% block body %}
+    <h1>TblDetalleComprobanteCompra</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdDetalleComprobanteCompra</th>
+                <td>{{ tbl_detalle_comprobante_compra.idDetalleComprobanteCompra }}</td>
+            </tr>
+            <tr>
+                <th>Cantidad</th>
+                <td>{{ tbl_detalle_comprobante_compra.cantidad }}</td>
+            </tr>
+            <tr>
+                <th>Precio</th>
+                <td>{{ tbl_detalle_comprobante_compra.precio }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ tbl_detalle_comprobante_compra.estado }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_detalle_comprobante_compra_index') }}">back to list</a>
+
+    <a href="{{ path('tbl_detalle_comprobante_compra_edit', {'idDetalleComprobanteCompra': tbl_detalle_comprobante_compra.idDetalleComprobanteCompra}) }}">edit</a>
+
+    {{ include('tbl_detalle_comprobante_compra/_delete_form.html.twig') }}
+{% endblock %}

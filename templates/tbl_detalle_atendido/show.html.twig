@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblDetalleAtendido{% endblock %}
+
+{% block body %}
+    <h1>TblDetalleAtendido</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdDetalleAtendido</th>
+                <td>{{ tbl_detalle_atendido.idDetalleAtendido }}</td>
+            </tr>
+            <tr>
+                <th>Cantidad</th>
+                <td>{{ tbl_detalle_atendido.cantidad }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ tbl_detalle_atendido.estado }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_detalle_atendido_index') }}">back to list</a>
+
+    <a href="{{ path('tbl_detalle_atendido_edit', {'idDetalleAtendido': tbl_detalle_atendido.idDetalleAtendido}) }}">edit</a>
+
+    {{ include('tbl_detalle_atendido/_delete_form.html.twig') }}
+{% endblock %}

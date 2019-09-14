@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblProveedor index{% endblock %}
+
+{% block body %}
+    <h1>TblProveedor index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdProveedor</th>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Ruc</th>
+                <th>Telefono</th>
+                <th>Celular</th>
+                <th>Web</th>
+                <th>Contacto</th>
+                <th>TelefContacto</th>
+                <th>Direccion</th>
+                <th>Correo</th>
+                <th>Estado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tbl_proveedor in tbl_proveedors %}
+            <tr>
+                <td>{{ tbl_proveedor.idProveedor }}</td>
+                <td>{{ tbl_proveedor.codigo }}</td>
+                <td>{{ tbl_proveedor.nombre }}</td>
+                <td>{{ tbl_proveedor.ruc }}</td>
+                <td>{{ tbl_proveedor.telefono }}</td>
+                <td>{{ tbl_proveedor.celular }}</td>
+                <td>{{ tbl_proveedor.web }}</td>
+                <td>{{ tbl_proveedor.contacto }}</td>
+                <td>{{ tbl_proveedor.telefContacto }}</td>
+                <td>{{ tbl_proveedor.direccion }}</td>
+                <td>{{ tbl_proveedor.correo }}</td>
+                <td>{{ tbl_proveedor.estado }}</td>
+                <td>
+                    <a href="{{ path('tbl_proveedor_show', {'idProveedor': tbl_proveedor.idProveedor}) }}">show</a>
+                    <a href="{{ path('tbl_proveedor_edit', {'idProveedor': tbl_proveedor.idProveedor}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="13">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_proveedor_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblGuiaSalida{% endblock %}
+
+{% block body %}
+    <h1>TblGuiaSalida</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdGuiaSalida</th>
+                <td>{{ tbl_guia_salida.idGuiaSalida }}</td>
+            </tr>
+            <tr>
+                <th>NumSerie</th>
+                <td>{{ tbl_guia_salida.numSerie }}</td>
+            </tr>
+            <tr>
+                <th>Numeracion</th>
+                <td>{{ tbl_guia_salida.numeracion }}</td>
+            </tr>
+            <tr>
+                <th>FechaSalida</th>
+                <td>{{ tbl_guia_salida.fechaSalida ? tbl_guia_salida.fechaSalida|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>FechaLlegada</th>
+                <td>{{ tbl_guia_salida.fechaLlegada ? tbl_guia_salida.fechaLlegada|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transportista</th>
+                <td>{{ tbl_guia_salida.transportista }}</td>
+            </tr>
+            <tr>
+                <th>Licencia</th>
+                <td>{{ tbl_guia_salida.licencia }}</td>
+            </tr>
+            <tr>
+                <th>Cantidad</th>
+                <td>{{ tbl_guia_salida.cantidad }}</td>
+            </tr>
+            <tr>
+                <th>PuntoLlegada</th>
+                <td>{{ tbl_guia_salida.puntoLlegada }}</td>
+            </tr>
+            <tr>
+                <th>IdAtendido</th>
+                <td>{{ tbl_guia_salida.idAtendido }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ tbl_guia_salida.estado }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_guia_salida_index') }}">back to list</a>
+
+    <a href="{{ path('tbl_guia_salida_edit', {'idGuiaSalida': tbl_guia_salida.idGuiaSalida}) }}">edit</a>
+
+    {{ include('tbl_guia_salida/_delete_form.html.twig') }}
+{% endblock %}

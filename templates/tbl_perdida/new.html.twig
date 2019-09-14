@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TblPerdida{% endblock %}
+
+{% block body %}
+    <h1>Create new TblPerdida</h1>
+
+    {{ include('tbl_perdida/_form.html.twig') }}
+
+    <a href="{{ path('tbl_perdida_index') }}">back to list</a>
+{% endblock %}

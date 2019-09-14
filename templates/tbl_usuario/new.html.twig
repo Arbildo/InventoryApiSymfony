@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TblUsuario{% endblock %}
+
+{% block body %}
+    <h1>Create new TblUsuario</h1>
+
+    {{ include('tbl_usuario/_form.html.twig') }}
+
+    <a href="{{ path('tbl_usuario_index') }}">back to list</a>
+{% endblock %}

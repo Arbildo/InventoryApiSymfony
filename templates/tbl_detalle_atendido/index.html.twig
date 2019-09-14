@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblDetalleAtendido index{% endblock %}
+
+{% block body %}
+    <h1>TblDetalleAtendido index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdDetalleAtendido</th>
+                <th>Cantidad</th>
+                <th>Estado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tbl_detalle_atendido in tbl_detalle_atendidos %}
+            <tr>
+                <td>{{ tbl_detalle_atendido.idDetalleAtendido }}</td>
+                <td>{{ tbl_detalle_atendido.cantidad }}</td>
+                <td>{{ tbl_detalle_atendido.estado }}</td>
+                <td>
+                    <a href="{{ path('tbl_detalle_atendido_show', {'idDetalleAtendido': tbl_detalle_atendido.idDetalleAtendido}) }}">show</a>
+                    <a href="{{ path('tbl_detalle_atendido_edit', {'idDetalleAtendido': tbl_detalle_atendido.idDetalleAtendido}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_detalle_atendido_new') }}">Create new</a>
+{% endblock %}

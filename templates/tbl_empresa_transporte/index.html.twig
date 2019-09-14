@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblEmpresaTransporte index{% endblock %}
+
+{% block body %}
+    <h1>TblEmpresaTransporte index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdEmpresa</th>
+                <th>Codigo</th>
+                <th>Ruc</th>
+                <th>RazonSocial</th>
+                <th>Direccion</th>
+                <th>Telefono</th>
+                <th>Estado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tbl_empresa_transporte in tbl_empresa_transportes %}
+            <tr>
+                <td>{{ tbl_empresa_transporte.idEmpresa }}</td>
+                <td>{{ tbl_empresa_transporte.codigo }}</td>
+                <td>{{ tbl_empresa_transporte.ruc }}</td>
+                <td>{{ tbl_empresa_transporte.razonSocial }}</td>
+                <td>{{ tbl_empresa_transporte.direccion }}</td>
+                <td>{{ tbl_empresa_transporte.telefono }}</td>
+                <td>{{ tbl_empresa_transporte.estado }}</td>
+                <td>
+                    <a href="{{ path('tbl_empresa_transporte_show', {'idEmpresa': tbl_empresa_transporte.idEmpresa}) }}">show</a>
+                    <a href="{{ path('tbl_empresa_transporte_edit', {'idEmpresa': tbl_empresa_transporte.idEmpresa}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_empresa_transporte_new') }}">Create new</a>
+{% endblock %}

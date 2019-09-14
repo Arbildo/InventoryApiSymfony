@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TblOrdenCompra{% endblock %}
+
+{% block body %}
+    <h1>TblOrdenCompra</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdOrdenCompra</th>
+                <td>{{ tbl_orden_compra.idOrdenCompra }}</td>
+            </tr>
+            <tr>
+                <th>Codigo</th>
+                <td>{{ tbl_orden_compra.codigo }}</td>
+            </tr>
+            <tr>
+                <th>Fecha</th>
+                <td>{{ tbl_orden_compra.fecha ? tbl_orden_compra.fecha|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <td>{{ tbl_orden_compra.total }}</td>
+            </tr>
+            <tr>
+                <th>Cantidad</th>
+                <td>{{ tbl_orden_compra.cantidad }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ tbl_orden_compra.estado }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('tbl_orden_compra_index') }}">back to list</a>
+
+    <a href="{{ path('tbl_orden_compra_edit', {'idOrdenCompra': tbl_orden_compra.idOrdenCompra}) }}">edit</a>
+
+    {{ include('tbl_orden_compra/_delete_form.html.twig') }}
+{% endblock %}
