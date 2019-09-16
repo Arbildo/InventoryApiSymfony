@@ -141,24 +141,24 @@ class TblProducto
         return $this;
     }
 
-    public function getIdTipo(): ?TblTipoProducto
+    public function getTipo(): ?TblTipoProducto
     {
         return $this->idTipo;
     }
 
-    public function setIdTipo(?TblTipoProducto $idTipo): self
+    public function setTipo(?TblTipoProducto $idTipo): self
     {
         $this->idTipo = $idTipo;
 
         return $this;
     }
 
-    public function getIdUnidad(): ?TblUnidadMedida
+    public function getUnidad(): ?TblUnidadMedida
     {
         return $this->idUnidad;
     }
 
-    public function setIdUnidad(?TblUnidadMedida $idUnidad): self
+    public function setUnidad(?TblUnidadMedida $idUnidad): self
     {
         $this->idUnidad = $idUnidad;
 

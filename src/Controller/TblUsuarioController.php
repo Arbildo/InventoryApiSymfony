@@ -9,6 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Route("/tbl/usuario")
@@ -20,9 +23,15 @@ class TblUsuarioController extends AbstractController
      */
     public function index(TblUsuarioRepository $tblUsuarioRepository): Response
     {
-        return $this->render('tbl_usuario/index.html.twig', [
-            'tbl_usuarios' => $tblUsuarioRepository->findAll(),
-        ]);
+        $encoders = [new JsonEncoder()];
+        $normalizers = new ObjectNormalizer();
+        $normalizers->setIgnoredAttributes(["__initializer__", "__cloner__","__isInitialized__","password"] );
+        $serializer = new Serializer([$normalizers], $encoders);
+        $result =$serializer->serialize($tblUsuarioRepository->findAll(), 'json');
+        $response = new Response();
+        $response->setContent($result);
+        return $response;
+
     }
 
     /**
@@ -53,9 +62,14 @@ class TblUsuarioController extends AbstractController
      */
     public function show(TblUsuario $tblUsuario): Response
     {
-        return $this->render('tbl_usuario/show.html.twig', [
-            'tbl_usuario' => $tblUsuario,
-        ]);
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+        $foo =$serializer->serialize($tblUsuario, 'json');
+        $response = new Response();
+        $response->setContent($foo);
+
+        return $response;
     }
 
     /**

@@ -181,5 +181,4 @@ class TblCliente
         return $this;
     }
 
-
 }

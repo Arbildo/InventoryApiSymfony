@@ -9,6 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Route("/tbl/producto")
@@ -20,9 +23,14 @@ class TblProductoController extends AbstractController
      */
     public function index(TblProductoRepository $tblProductoRepository): Response
     {
-        return $this->render('tbl_producto/index.html.twig', [
-            'tbl_productos' => $tblProductoRepository->findAll(),
-        ]);
+        $encoders = [new JsonEncoder()];
+        $normalizers = new ObjectNormalizer();
+        $normalizers->setIgnoredAttributes(["__initializer__", "__cloner__","__isInitialized__"]);
+        $serializer = new Serializer([$normalizers], $encoders);
+        $result =$serializer->serialize($tblProductoRepository->findAll(), 'json');
+        $response = new Response();
+        $response->setContent($result);
+        return $response;
     }
 
     /**

@@ -140,17 +140,7 @@ class TblUsuario
         return $this;
     }
 
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
 
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
 
     public function getCorreo(): ?string
     {
@@ -188,16 +178,32 @@ class TblUsuario
         return $this;
     }
 
-    public function getIdCargo(): ?TblCargo
+    public function getCargo(): ?TblCargo
     {
         return $this->idCargo;
     }
 
-    public function setIdCargo(?TblCargo $idCargo): self
+    public function setCargo(?TblCargo $idCargo): self
     {
         $this->idCargo = $idCargo;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
     }
 
 
