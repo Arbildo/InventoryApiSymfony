@@ -15,10 +15,7 @@ class TblProductoType extends AbstractType
             ->add('nombre')
             ->add('codigo')
             ->add('descripcion')
-            ->add('imagen')
             ->add('estado')
-            ->add('idTipo')
-            ->add('idUnidad')
         ;
     }
 
