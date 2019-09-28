@@ -18,9 +18,8 @@ class TblUsuarioType extends AbstractType
             ->add('usuario')
             ->add('password')
             ->add('correo')
-            ->add('foto')
             ->add('estado')
-            ->add('idCargo')
+            ->add('cargo', TblCargoType::class)
         ;
     }
 

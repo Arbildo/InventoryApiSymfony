@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\TblProducto;
+use App\Entity\TblTipoProducto;
+use App\Entity\TblUnidadMedida;
 use App\Form\TblProductoType;
 use App\Repository\TblProductoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,13 +24,15 @@ class TblProductoController extends AbstractController
     /**
      * @Route("/", name="tbl_producto_index", methods={"GET"})
      */
-    public function index(TblProductoRepository $tblProductoRepository): Response
+    public function index(Request $request ,TblProductoRepository $tblProductoRepository): Response
     {
+
+        parse_str($request->getQueryString(), $array);
         $encoders = [new JsonEncoder()];
         $normalizers = new ObjectNormalizer();
         $normalizers->setIgnoredAttributes(["__initializer__", "__cloner__", "__isInitialized__"]);
         $serializer = new Serializer([$normalizers], $encoders);
-        $result = $serializer->serialize($tblProductoRepository->findAll(), 'json');
+        $result = $serializer->serialize($tblProductoRepository->findBy($array), 'json');
         $response = new Response();
         $response->setContent($result);
 
@@ -36,26 +40,29 @@ class TblProductoController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="tbl_producto_new", methods={"GET","POST"})
+     * @Route("/new", name="tbl_producto_new", methods={"POST"})
      */
     public function new(Request $request): Response
     {
-        $tblProducto = new TblProducto();
+        $data            = json_decode($request->getContent(),true);
+        $em                 = $this->getDoctrine()->getManager();
+        $tipoProducto       = $data['tipo'];
+        $unidadMedida       = $data['unidad'];
+
+        $tblProducto        = new TblProducto();
+        $tblTipoProducto    = $em->find(TblTipoProducto::class, $tipoProducto);
+        $tblUnidadMedida    = $em->find(TblUnidadMedida::class, $unidadMedida);
+
+        $tblProducto->setTipo($tblTipoProducto);
+        $tblProducto->setUnidad($tblUnidadMedida);
+
         $form = $this->createForm(TblProductoType::class, $tblProducto);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($tblProducto);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('tbl_producto_index');
-        }
-
-        return $this->render('tbl_producto/new.html.twig', [
-            'tbl_producto' => $tblProducto,
-            'form' => $form->createView(),
-        ]);
+        $form->submit($data);
+        $em->persist($tblProducto);
+        $em->flush();
+        $data = $this->serializeProduct($tblProducto);
+        $response = new JsonResponse($data, 200);
+        return $response;
     }
 
     /**
@@ -73,20 +80,23 @@ class TblProductoController extends AbstractController
      */
     public function edit(Request $request, $idProducto): Response
     {
-        $product = $this->getDoctrine()
-            ->getRepository(TblProducto::class)->find((int)$idProducto);
-
+        $product = $this->getDoctrine()->getRepository(TblProducto::class)->find((int)$idProducto);
 
         if (!$product) {
-            throw $this->createNotFoundException(sprintf(
-                'Error "%s"',
-                $product
-            ));
+            throw $this->createNotFoundException(sprintf('Error "%s"', $product));
         }
         $data = json_decode($request->getContent(), true);
-        $form = $this->createForm(TblProductoType::class, $product);
-        $form->submit($data);
         $em = $this->getDoctrine()->getManager();
+        $tipoProducto       = $data['tipo'];
+        $unidadMedida       = $data['unidad'];
+        $tblTipoProducto    = $em->find(TblTipoProducto::class, $tipoProducto);
+        $tblUnidadMedida    = $em->find(TblUnidadMedida::class, $unidadMedida);
+        $product->setTipo($tblTipoProducto);
+        $product->setUnidad($tblUnidadMedida);
+        $form = $this->createForm(TblProductoType::class, $product);
+
+
+        $form->submit($data);
         $em->persist($product);
         $em->flush();
         $data = $this->serializeProduct($product);
@@ -111,11 +121,10 @@ class TblProductoController extends AbstractController
 
 
     /**
-     * @Route("/{idProducto}/downgrade", name="tbl_producto_delete", methods={"PUT"})
+     * @Route("/{idProducto}/disable", name="tbl_producto_delete", methods={"PUT"})
      */
-    public function downgrade(Request $request, $idProducto): Response
+    public function disable(Request $request, $idProducto): Response
     {
-
         $product = $this->getDoctrine()
             ->getRepository(TblProducto::class)->find((int)$idProducto);
 
@@ -130,7 +139,9 @@ class TblProductoController extends AbstractController
         $product->setEstado($state);
         $em->persist($product);
         $em->flush();
-        
+        $data = $this->serializeProduct($product);
+        $response = new JsonResponse($data, 200);
+        return $response;
     }
 
 
