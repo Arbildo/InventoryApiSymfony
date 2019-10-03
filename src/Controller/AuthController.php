@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\TblUsuario;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\EventListener\ValidateRequestListener;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -13,6 +15,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AuthController extends AbstractController
 {
+    private $jwtEncoder;
+
+    public function __construct(JWTEncoderInterface $JWTEncoder)
+    {
+        $this->jwtEncoder = $JWTEncoder;
+    }
+
     /**
      * @Route("/login", name="login")
      */
@@ -27,20 +36,19 @@ class AuthController extends AbstractController
 
         $data = $this->serializeUser($userInfo);
 
-        $token = $this->get('lexik_jwt_authentication.encoder')
-            ->encode(['username' => $data]);
+        $encoded = $this->jwtEncoder->encode($data);
 
-        $response = new JsonResponse($token, 200);
+        $response = new JsonResponse(["token" => $encoded], 200);
+
         return $response;
     }
 
     private function serializeUser($data)
     {
         if (empty($data)){
-            return ['code '=> 204, 'data' => []];
+            return ['data' => []];
         }
         return [
-            'code' => 200,
             'data'=> [
             'nombres' =>$data->getNombres(),
             'apellidos' =>$data->getApellidos(),
