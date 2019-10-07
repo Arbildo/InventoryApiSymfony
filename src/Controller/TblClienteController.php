@@ -9,6 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Route("/tbl/cliente")
@@ -18,11 +21,16 @@ class TblClienteController extends AbstractController
     /**
      * @Route("/", name="tbl_cliente_index", methods={"GET"})
      */
-    public function index(TblClienteRepository $tblClienteRepository): Response
+    public function index(Request $request ,TblClienteRepository $tblClienteRepository): Response
     {
-        return $this->render('tbl_cliente/index.html.twig', [
-            'tbl_clientes' => $tblClienteRepository->findAll(),
-        ]);
+        $encoders = [new JsonEncoder()];
+        $normalizers = new ObjectNormalizer();
+        $normalizers->setIgnoredAttributes(["__initializer__", "__cloner__","__isInitialized__","password"] );
+        $serializer = new Serializer([$normalizers], $encoders);
+        $result =$serializer->serialize($tblClienteRepository->findAll(), 'json');
+        $response = new Response();
+        $response->setContent($result);
+        return $response;
     }
 
     /**
