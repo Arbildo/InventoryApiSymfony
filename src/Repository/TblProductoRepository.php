@@ -19,6 +19,7 @@ class TblProductoRepository extends ServiceEntityRepository
         parent::__construct($registry, TblProducto::class);
     }
 
+
     // /**
     //  * @return TblProducto[] Returns an array of TblProducto objects
     //  */

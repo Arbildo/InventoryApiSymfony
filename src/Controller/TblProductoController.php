@@ -39,6 +39,12 @@ class TblProductoController extends AbstractController
         return $response;
     }
 
+    private function generateProductCode($id)
+    {
+        return "PROD-{$id}";
+
+    }
+
     /**
      * @Route("/new", name="tbl_producto_new", methods={"POST"})
      */
@@ -48,7 +54,6 @@ class TblProductoController extends AbstractController
         $em                 = $this->getDoctrine()->getManager();
         $tipoProducto       = $data['tipo'];
         $unidadMedida       = $data['unidad'];
-
         $tblProducto        = new TblProducto();
         $tblTipoProducto    = $em->find(TblTipoProducto::class, $tipoProducto);
         $tblUnidadMedida    = $em->find(TblUnidadMedida::class, $unidadMedida);
@@ -60,6 +65,11 @@ class TblProductoController extends AbstractController
         $form->submit($data);
         $em->persist($tblProducto);
         $em->flush();
+        $code = $this->generateProductCode($tblProducto->getIdProducto());
+        $tblProducto->setCodigo($code);
+        $em->persist($tblProducto);
+        $em->flush();
+
         $data = $this->serializeProduct($tblProducto);
         $response = new JsonResponse($data, 200);
         return $response;
@@ -94,8 +104,6 @@ class TblProductoController extends AbstractController
         $product->setTipo($tblTipoProducto);
         $product->setUnidad($tblUnidadMedida);
         $form = $this->createForm(TblProductoType::class, $product);
-
-
         $form->submit($data);
         $em->persist($product);
         $em->flush();
