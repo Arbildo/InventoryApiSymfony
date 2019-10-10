@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/tbl/productos/detalle")
@@ -21,16 +22,13 @@ class TblProductoDetalleController extends AbstractController
     /**
      * @Route("/", name="tbl_producto_detalle_index", methods={"GET"})
      */
-    public function index(Request $request, TblProductoDetalleRepository $tblProductoDetalleRepository): Response
-    {              parse_str($request->getQueryString(), $array);
-        $encoders = [new JsonEncoder()];
-        $normalizers = new ObjectNormalizer();
-        $normalizers->setIgnoredAttributes(["__initializer__", "__cloner__", "__isInitialized__"]);
-        $serializer = new Serializer([$normalizers], $encoders);
-        $result = $serializer->serialize($tblProductoDetalleRepository->findBy($array), 'json');
+    public function index(Request $request, TblProductoDetalleRepository $tblProductoDetalleRepository, SerializerInterface $serializer): Response
+    {
+        parse_str($request->getQueryString(), $array);
+        $result = $serializer->serialize($tblProductoDetalleRepository->findBy($array), 'json',
+            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
         $response = new Response();
         $response->setContent($result);
-
         return $response;
 
     }
