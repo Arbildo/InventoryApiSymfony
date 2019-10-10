@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TblProductoDetalle
  *
- * @ORM\Table(name="tbl_producto_detalle", indexes={@ORM\Index(name="ID_TALLA", columns={"ID_TALLA"}), @ORM\Index(name="id_producto", columns={"ID_PRODUCTO"}), @ORM\Index(name="ID_LOTE", columns={"ID_LOTE"})})
+ * @ORM\Table(name="tbl_producto_detalle", indexes={@ORM\Index(name="id_producto", columns={"ID_PRODUCTO"}), @ORM\Index(name="ID_LOTE", columns={"ID_LOTE"})})
  * @ORM\Entity(repositoryClass="App\Repository\TblProductoDetalleRepository")
  */
 class TblProductoDetalle
@@ -58,16 +58,6 @@ class TblProductoDetalle
      * })
      */
     private $idProducto;
-
-    /**
-     * @var \TblTalla
-     *
-     * @ORM\ManyToOne(targetEntity="TblTalla")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_TALLA", referencedColumnName="ID_TALLA")
-     * })
-     */
-    private $idTalla;
 
     /**
      * @var \TblLote
@@ -140,18 +130,6 @@ class TblProductoDetalle
     public function setIdProducto(?TblProducto $idProducto): self
     {
         $this->idProducto = $idProducto;
-
-        return $this;
-    }
-
-    public function getIdTalla(): ?TblTalla
-    {
-        return $this->idTalla;
-    }
-
-    public function setIdTalla(?TblTalla $idTalla): self
-    {
-        $this->idTalla = $idTalla;
 
         return $this;
     }

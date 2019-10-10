@@ -9,20 +9,30 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
- * @Route("/tbl/producto/detalle")
+ * @Route("/tbl/productos/detalle")
  */
 class TblProductoDetalleController extends AbstractController
 {
     /**
      * @Route("/", name="tbl_producto_detalle_index", methods={"GET"})
      */
-    public function index(TblProductoDetalleRepository $tblProductoDetalleRepository): Response
-    {
-        return $this->render('tbl_producto_detalle/index.html.twig', [
-            'tbl_producto_detalles' => $tblProductoDetalleRepository->findAll(),
-        ]);
+    public function index(Request $request, TblProductoDetalleRepository $tblProductoDetalleRepository): Response
+    {              parse_str($request->getQueryString(), $array);
+        $encoders = [new JsonEncoder()];
+        $normalizers = new ObjectNormalizer();
+        $normalizers->setIgnoredAttributes(["__initializer__", "__cloner__", "__isInitialized__"]);
+        $serializer = new Serializer([$normalizers], $encoders);
+        $result = $serializer->serialize($tblProductoDetalleRepository->findBy($array), 'json');
+        $response = new Response();
+        $response->setContent($result);
+
+        return $response;
+
     }
 
     /**

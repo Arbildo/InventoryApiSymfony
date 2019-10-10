@@ -17,7 +17,6 @@ class TblProductoDetalleType extends AbstractType
             ->add('precio')
             ->add('estado')
             ->add('idProducto')
-            ->add('idTalla')
             ->add('idLote')
         ;
     }
