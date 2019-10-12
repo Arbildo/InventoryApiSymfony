@@ -6,9 +6,11 @@ use App\Entity\TblLote;
 use App\Form\TblLoteType;
 use App\Repository\TblLoteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/tbl/lote")
@@ -18,11 +20,14 @@ class TblLoteController extends AbstractController
     /**
      * @Route("/", name="tbl_lote_index", methods={"GET"})
      */
-    public function index(TblLoteRepository $tblLoteRepository): Response
+    public function index(Request $request, TblLoteRepository $tblLoteRepository, SerializerInterface $serializer): Response
     {
-        return $this->render('tbl_lote/index.html.twig', [
-            'tbl_lotes' => $tblLoteRepository->findAll(),
-        ]);
+        parse_str($request->getQueryString(), $array);
+        $result = $serializer->serialize($tblLoteRepository->findBy($array), 'json',
+            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
+        $response = new Response();
+        $response->setContent($result);
+        return $response;
     }
 
     /**
@@ -30,22 +35,18 @@ class TblLoteController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $tblLote = new TblLote();
+        $data            = json_decode($request->getContent(),true);
+        $em                 = $this->getDoctrine()->getManager();
+        $tblLote        = new TblLote();
+
         $form = $this->createForm(TblLoteType::class, $tblLote);
-        $form->handleRequest($request);
+        $form->submit($data);
+        $em->persist($tblLote);
+        $em->flush();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($tblLote);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('tbl_lote_index');
-        }
-
-        return $this->render('tbl_lote/new.html.twig', [
-            'tbl_lote' => $tblLote,
-            'form' => $form->createView(),
-        ]);
+        $data = $this->serializeLote($tblLote);
+        $response = new JsonResponse($data, 200);
+        return $response;
     }
 
     /**
@@ -90,5 +91,10 @@ class TblLoteController extends AbstractController
         }
 
         return $this->redirectToRoute('tbl_lote_index');
+    }
+
+    private function serializeLote(TblLote $tblLote)
+    {
+        return ['idLote' => $tblLote->getIdLote()];
     }
 }

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * TblTipoDocumento
  *
  * @ORM\Table(name="tbl_tipo_documento")
- * @ORM\Entity(repositoryClass="App\Repository\TblTipoDocumentoRepository")
+ * @ORM\Entity
  */
 class TblTipoDocumento
 {

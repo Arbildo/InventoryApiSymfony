@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * TblUsuario
  *
  * @ORM\Table(name="tbl_usuario", indexes={@ORM\Index(name="ID_CARGO", columns={"ID_CARGO"})})
- * @ORM\Entity(repositoryClass="App\Repository\TblUsuarioRepository")
+ * @ORM\Entity
  */
 class TblUsuario
 {
@@ -140,7 +140,17 @@ class TblUsuario
         return $this;
     }
 
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
 
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
 
     public function getCorreo(): ?string
     {
@@ -178,32 +188,16 @@ class TblUsuario
         return $this;
     }
 
-    public function getCargo(): ?TblCargo
+    public function getIdCargo(): ?TblCargo
     {
         return $this->idCargo;
     }
 
-    public function setCargo(?TblCargo $idCargo): self
+    public function setIdCargo(?TblCargo $idCargo): self
     {
         $this->idCargo = $idCargo;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
-     * @param string $password
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
     }
 
 

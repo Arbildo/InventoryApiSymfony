@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * TblLote
  *
  * @ORM\Table(name="tbl_lote")
- * @ORM\Entity(repositoryClass="App\Repository\TblLoteRepository")
+ * @ORM\Entity
  */
 class TblLote
 {
@@ -31,7 +31,7 @@ class TblLote
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_VENCIMIENTO", type="date", nullable=false)
+     * @ORM\Column(name="FECHA_VENCIMIENTO", type="date")
      */
     private $fechaVencimiento;
 

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * TblOrdenCompra
  *
  * @ORM\Table(name="tbl_orden_compra", indexes={@ORM\Index(name="id_proveedor", columns={"ID_PROVEEDOR"})})
- * @ORM\Entity(repositoryClass="App\Repository\TblOrdenCompraRepository")
+ * @ORM\Entity
  */
 class TblOrdenCompra
 {

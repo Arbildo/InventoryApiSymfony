@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TblComprobanteCompra
  *
- * @ORM\Table(name="tbl_comprobante_compra", indexes={@ORM\Index(name="ID_TIPO_COMPROBANTE", columns={"ID_TIPO_COMPROBANTE"}), @ORM\Index(name="ID_PROVEEDOR", columns={"ID_PROVEEDOR"})})
- * @ORM\Entity(repositoryClass="App\Repository\TblComprobanteCompraRepository")
+ * @ORM\Table(name="tbl_comprobante_compra", indexes={@ORM\Index(name="ID_PROVEEDOR", columns={"ID_PROVEEDOR"}), @ORM\Index(name="ID_TIPO_COMPROBANTE", columns={"ID_TIPO_COMPROBANTE"})})
+ * @ORM\Entity
  */
 class TblComprobanteCompra
 {

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * TblCliente
  *
  * @ORM\Table(name="tbl_cliente", indexes={@ORM\Index(name="ID_TIPO", columns={"ID_TIPO"})})
- * @ORM\Entity(repositoryClass="App\Repository\TblClienteRepository")
+ * @ORM\Entity
  */
 class TblCliente
 {
@@ -180,5 +180,6 @@ class TblCliente
 
         return $this;
     }
+
 
 }

@@ -13,7 +13,6 @@ class TblLoteType extends AbstractType
     {
         $builder
             ->add('nombre')
-            ->add('fechaVencimiento')
             ->add('estado')
         ;
     }

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * TblTipoComprobante
  *
  * @ORM\Table(name="tbl_tipo_comprobante")
- * @ORM\Entity(repositoryClass="App\Repository\TblTipoComprobanteRepository")
+ * @ORM\Entity
  */
 class TblTipoComprobante
 {

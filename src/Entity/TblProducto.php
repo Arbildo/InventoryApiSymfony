@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * TblProducto
  *
  * @ORM\Table(name="tbl_producto", indexes={@ORM\Index(name="ID_UNIDAD", columns={"ID_UNIDAD"}), @ORM\Index(name="ID_CLASE", columns={"ID_TIPO"})})
- * @ORM\Entity(repositoryClass="App\Repository\TblProductoRepository")
+ * @ORM\Entity
  */
 class TblProducto
 {
@@ -141,24 +141,24 @@ class TblProducto
         return $this;
     }
 
-    public function getTipo(): ?TblTipoProducto
+    public function getIdTipo(): ?TblTipoProducto
     {
         return $this->idTipo;
     }
 
-    public function setTipo(?TblTipoProducto $idTipo): self
+    public function setIdTipo(?TblTipoProducto $idTipo): self
     {
         $this->idTipo = $idTipo;
 
         return $this;
     }
 
-    public function getUnidad(): ?TblUnidadMedida
+    public function getIdUnidad(): ?TblUnidadMedida
     {
         return $this->idUnidad;
     }
 
-    public function setUnidad(?TblUnidadMedida $idUnidad): self
+    public function setIdUnidad(?TblUnidadMedida $idUnidad): self
     {
         $this->idUnidad = $idUnidad;
 

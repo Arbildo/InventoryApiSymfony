@@ -7,11 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TblProductoDetalle
  *
- * @ORM\Table(name="tbl_producto_detalle", indexes={@ORM\Index(name="id_producto", columns={"ID_PRODUCTO"}), @ORM\Index(name="ID_LOTE", columns={"ID_LOTE"})})
- * @ORM\Entity(repositoryClass="App\Repository\TblProductoDetalleRepository")
+ * @ORM\Table(name="tbl_producto_detalle", indexes={@ORM\Index(name="ID_LOTE", columns={"ID_LOTE"}), @ORM\Index(name="id_producto", columns={"ID_PRODUCTO"}), @ORM\Index(name="fk_estado_id", columns={"ESTADO"})})
+ * @ORM\Entity
  */
 class TblProductoDetalle
 {
+
     /**
      * @var int
      *
@@ -43,9 +44,19 @@ class TblProductoDetalle
     private $precio;
 
     /**
-     * @var int
+     * @var int|null
      *
-     * @ORM\Column(name="ESTADO", type="integer", nullable=false)
+     * @ORM\Column(name="STOCK_ACTUAL", type="integer", nullable=true)
+     */
+    private $stockActual;
+
+    /**
+     * @var \TblProductoDetalleEstado
+     *
+     * @ORM\ManyToOne(targetEntity="TblProductoDetalleEstado")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="estado", referencedColumnName="ID")
+     * })
      */
     private $estado;
 
@@ -110,12 +121,24 @@ class TblProductoDetalle
         return $this;
     }
 
-    public function getEstado(): ?int
+    public function getStockActual(): ?int
+    {
+        return $this->stockActual;
+    }
+
+    public function setStockActual(?int $stockActual): self
+    {
+        $this->stockActual = $stockActual;
+
+        return $this;
+    }
+
+    public function getEstado(): ?TblProductoDetalleEstado
     {
         return $this->estado;
     }
 
-    public function setEstado(int $estado): self
+    public function setEstado(?TblProductoDetalleEstado $estado): self
     {
         $this->estado = $estado;
 

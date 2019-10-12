@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\TblLote;
 use App\Entity\TblProductoDetalle;
 use App\Form\TblProductoDetalleType;
 use App\Repository\TblProductoDetalleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,22 +40,18 @@ class TblProductoDetalleController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $tblProductoDetalle = new TblProductoDetalle();
+        $data            = json_decode($request->getContent(),true);
+        $em                 = $this->getDoctrine()->getManager();
+        $tblProductoDetalle        = new TblProductoDetalle();
+
         $form = $this->createForm(TblProductoDetalleType::class, $tblProductoDetalle);
-        $form->handleRequest($request);
+        $form->submit($data);
+        $em->persist($tblProductoDetalle);
+        $em->flush();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($tblProductoDetalle);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('tbl_producto_detalle_index');
-        }
-
-        return $this->render('tbl_producto_detalle/new.html.twig', [
-            'tbl_producto_detalle' => $tblProductoDetalle,
-            'form' => $form->createView(),
-        ]);
+        $data = $this->serializeProductDetail($tblProductoDetalle);
+        $response = new JsonResponse($data, 200);
+        return $response;
     }
 
     /**
@@ -98,5 +96,13 @@ class TblProductoDetalleController extends AbstractController
         }
 
         return $this->redirectToRoute('tbl_producto_detalle_index');
+    }
+
+    private function serializeProductDetail(TblProductoDetalle $tblProductoDetalle)
+    {
+        return [
+            'ProductDetailId' => $tblProductoDetalle->getIdProductoDetalle(),
+        ];
+
     }
 }

@@ -14,6 +14,7 @@ class TblProductoDetalleType extends AbstractType
         $builder
             ->add('stockInicial')
             ->add('stockMinimo')
+            ->add('stockActual')
             ->add('precio')
             ->add('estado')
             ->add('idProducto')

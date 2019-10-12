@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * TblUnidadMedida
  *
  * @ORM\Table(name="tbl_unidad_medida")
- * @ORM\Entity(repositoryClass="App\Repository\TblUnidadMedidaRepository")
+ * @ORM\Entity
  */
 class TblUnidadMedida
 {

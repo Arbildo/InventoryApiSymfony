@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TblDetalleNotaCredito
  *
- * @ORM\Table(name="tbl_detalle_nota_credito", indexes={@ORM\Index(name="ID_NOTA_CREDITO", columns={"ID_NOTA_CREDITO"}), @ORM\Index(name="ID_DETALLE_COMPROBANTE_VENTA", columns={"ID_DETALLE_COMPROBANTE_VENTA"}), @ORM\Index(name="ID_DETALLE_PRODUCTO", columns={"ID_DETALLE_PRODUCTO"})})
- * @ORM\Entity(repositoryClass="App\Repository\TblDetalleNotaCreditoRepository")
+ * @ORM\Table(name="tbl_detalle_nota_credito", indexes={@ORM\Index(name="ID_DETALLE_COMPROBANTE_VENTA", columns={"ID_DETALLE_COMPROBANTE_VENTA"}), @ORM\Index(name="ID_DETALLE_PRODUCTO", columns={"ID_DETALLE_PRODUCTO"}), @ORM\Index(name="ID_NOTA_CREDITO", columns={"ID_NOTA_CREDITO"})})
+ * @ORM\Entity
  */
 class TblDetalleNotaCredito
 {
