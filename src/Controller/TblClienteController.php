@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/tbl/cliente")
@@ -21,15 +22,12 @@ class TblClienteController extends AbstractController
     /**
      * @Route("/", name="tbl_cliente_index", methods={"GET"})
      */
-    public function index(Request $request ,TblClienteRepository $tblClienteRepository): Response
+    public function index(Request $request ,TblClienteRepository $tblClienteRepository, SerializerInterface $serializer): Response
     {
-        $encoders = [new JsonEncoder()];
-        $normalizers = new ObjectNormalizer();
-        $normalizers->setIgnoredAttributes(["__initializer__", "__cloner__","__isInitialized__","password"] );
-        $serializer = new Serializer([$normalizers], $encoders);
-        $result =$serializer->serialize($tblClienteRepository->findAll(), 'json');
-        $response = new Response();
-        $response->setContent($result);
+        parse_str($request->getQueryString(), $array);
+        $result = $serializer->serialize($tblClienteRepository->findBy($array), 'json',
+            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
+        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
         return $response;
     }
 
