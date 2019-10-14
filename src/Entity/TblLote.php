@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TblLote
  *
- * @ORM\Table(name="tbl_lote")
+ * @ORM\Table(name="tbl_lote", indexes={@ORM\Index(name="fk_lote_estado_id", columns={"ESTADO"})})
  * @ORM\Entity
  */
 class TblLote
@@ -29,16 +29,26 @@ class TblLote
     private $nombre;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      *
-     * @ORM\Column(name="FECHA_VENCIMIENTO", type="date")
+     * @ORM\Column(name="FECHA_VENCIMIENTO", type="date", nullable=true)
      */
     private $fechaVencimiento;
 
     /**
-     * @var int
+     * @var \DateTime|null
      *
-     * @ORM\Column(name="ESTADO", type="integer", nullable=false)
+     * @ORM\Column(name="FECHA_CREACION", type="date", nullable=true)
+     */
+    private $fechaCreacion;
+
+    /**
+     * @var \TblLoteEstado
+     *
+     * @ORM\ManyToOne(targetEntity="TblLoteEstado")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ESTADO", referencedColumnName="id")
+     * })
      */
     private $estado;
 
@@ -64,19 +74,31 @@ class TblLote
         return $this->fechaVencimiento;
     }
 
-    public function setFechaVencimiento(\DateTimeInterface $fechaVencimiento): self
+    public function setFechaVencimiento(?\DateTimeInterface $fechaVencimiento): self
     {
         $this->fechaVencimiento = $fechaVencimiento;
 
         return $this;
     }
 
-    public function getEstado(): ?int
+    public function getFechaCreacion(): ?\DateTimeInterface
+    {
+        return $this->fechaCreacion;
+    }
+
+    public function setFechaCreacion(?\DateTimeInterface $fechaCreacion): self
+    {
+        $this->fechaCreacion = $fechaCreacion;
+
+        return $this;
+    }
+
+    public function getEstado(): ?TblLoteEstado
     {
         return $this->estado;
     }
 
-    public function setEstado(int $estado): self
+    public function setEstado(?TblLoteEstado $estado): self
     {
         $this->estado = $estado;
 

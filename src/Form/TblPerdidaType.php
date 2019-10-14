@@ -13,7 +13,6 @@ class TblPerdidaType extends AbstractType
     {
         $builder
             ->add('codigo')
-            ->add('fecha')
             ->add('cantidad')
             ->add('descripcion')
             ->add('estado')

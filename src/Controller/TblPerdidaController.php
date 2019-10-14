@@ -6,9 +6,12 @@ use App\Entity\TblPerdida;
 use App\Form\TblPerdidaType;
 use App\Repository\TblPerdidaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @Route("/tbl/perdida")
@@ -18,11 +21,13 @@ class TblPerdidaController extends AbstractController
     /**
      * @Route("/", name="tbl_perdida_index", methods={"GET"})
      */
-    public function index(TblPerdidaRepository $tblPerdidaRepository): Response
+    public function index(Request $request, TblPerdidaRepository $tblPerdidaRepository, SerializerInterface $serializer): Response
     {
-        return $this->render('tbl_perdida/index.html.twig', [
-            'tbl_perdidas' => $tblPerdidaRepository->findAll(),
-        ]);
+        parse_str($request->getQueryString(), $array);
+        $result = $serializer->serialize($tblPerdidaRepository->findBy($array), 'json',
+            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
+        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
+        return $response;
     }
 
     /**
@@ -30,22 +35,23 @@ class TblPerdidaController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $tblPerdida = new TblPerdida();
+        $data               = json_decode($request->getContent(),true);
+        $em                 = $this->getDoctrine()->getManager();
+        $tblPerdida        = new TblPerdida();
+
         $form = $this->createForm(TblPerdidaType::class, $tblPerdida);
-        $form->handleRequest($request);
+        $form->submit($data);
+        $em->persist($tblPerdida);
+        $em->flush();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($tblPerdida);
-            $entityManager->flush();
+        $code = $this->generateProductLoseCode($tblPerdida->getIdPerdida());
+        $tblPerdida->setCodigo($code);
+        $em->persist($tblPerdida);
+        $em->flush();
 
-            return $this->redirectToRoute('tbl_perdida_index');
-        }
-
-        return $this->render('tbl_perdida/new.html.twig', [
-            'tbl_perdida' => $tblPerdida,
-            'form' => $form->createView(),
-        ]);
+        $data = $this->serializeProductLose($tblPerdida);
+        $response = new JsonResponse($data, 200);
+        return $response;
     }
 
     /**
@@ -58,6 +64,13 @@ class TblPerdidaController extends AbstractController
         ]);
     }
 
+    private function generateDateInput()
+    {
+        $creationDate = new \DateTime();
+        $creationDate->format( 'Y-m-d');
+
+        return $creationDate;
+    }
     /**
      * @Route("/{idPerdida}/edit", name="tbl_perdida_edit", methods={"GET","POST"})
      */
@@ -90,5 +103,15 @@ class TblPerdidaController extends AbstractController
         }
 
         return $this->redirectToRoute('tbl_perdida_index');
+    }
+
+    private function serializeProductLose(TblPerdida $tblPerdida)
+    {
+        return ['IdPerdida' => $tblPerdida->getIdPerdida()];
+    }
+
+    private function generateProductLoseCode($id)
+    {
+        return "REPORT-{$id}";
     }
 }

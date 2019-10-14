@@ -15,6 +15,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/tbl/producto")
@@ -24,18 +25,12 @@ class TblProductoController extends AbstractController
     /**
      * @Route("/", name="tbl_producto_index", methods={"GET"})
      */
-    public function index(Request $request ,TblProductoRepository $tblProductoRepository): Response
+    public function index(Request $request ,TblProductoRepository $tblProductoRepository, SerializerInterface $serializer): Response
     {
-
         parse_str($request->getQueryString(), $array);
-        $encoders = [new JsonEncoder()];
-        $normalizers = new ObjectNormalizer();
-        $normalizers->setIgnoredAttributes(["__initializer__", "__cloner__", "__isInitialized__"]);
-        $serializer = new Serializer([$normalizers], $encoders);
-        $result = $serializer->serialize($tblProductoRepository->findBy($array), 'json');
-        $response = new Response();
-        $response->setContent($result);
-
+        $result = $serializer->serialize($tblProductoRepository->findBy($array), 'json',
+            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
+        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
         return $response;
     }
 
