@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TblPerdida
  *
- * @ORM\Table(name="tbl_perdida", indexes={@ORM\Index(name="ID_DETALLE_PRODUCTO", columns={"ID_DETALLE_PRODUCTO"}), @ORM\Index(name="ID_LOTE", columns={"ID_LOTE"})})
+ * @ORM\Table(name="tbl_perdida", indexes={@ORM\Index(name="fk_perdida_estado_id", columns={"ESTADO"}), @ORM\Index(name="ID_DETALLE_PRODUCTO", columns={"ID_DETALLE_PRODUCTO"})})
  * @ORM\Entity
  */
 class TblPerdida
@@ -22,16 +22,16 @@ class TblPerdida
     private $idPerdida;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column(name="CODIGO", type="string", length=200, nullable=false)
+     * @ORM\Column(name="CODIGO", type="string", length=50, nullable=true)
      */
     private $codigo;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA", type="datetime")
+     * @ORM\Column(name="FECHA", type="datetime", nullable=false)
      */
     private $fecha;
 
@@ -50,9 +50,12 @@ class TblPerdida
     private $descripcion;
 
     /**
-     * @var int
+     * @var \TblPerdidaEstado
      *
-     * @ORM\Column(name="ESTADO", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="TblPerdidaEstado")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ESTADO", referencedColumnName="id")
+     * })
      */
     private $estado;
 
@@ -66,16 +69,6 @@ class TblPerdida
      */
     private $idDetalleProducto;
 
-    /**
-     * @var \TblLote
-     *
-     * @ORM\ManyToOne(targetEntity="TblLote")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_LOTE", referencedColumnName="ID_LOTE")
-     * })
-     */
-    private $idLote;
-
     public function getIdPerdida(): ?int
     {
         return $this->idPerdida;
@@ -86,7 +79,7 @@ class TblPerdida
         return $this->codigo;
     }
 
-    public function setCodigo(string $codigo): self
+    public function setCodigo(?string $codigo): self
     {
         $this->codigo = $codigo;
 
@@ -129,12 +122,12 @@ class TblPerdida
         return $this;
     }
 
-    public function getEstado(): ?int
+    public function getEstado(): ?TblPerdidaEstado
     {
         return $this->estado;
     }
 
-    public function setEstado(int $estado): self
+    public function setEstado(?TblPerdidaEstado $estado): self
     {
         $this->estado = $estado;
 
@@ -149,18 +142,6 @@ class TblPerdida
     public function setIdDetalleProducto(?TblProductoDetalle $idDetalleProducto): self
     {
         $this->idDetalleProducto = $idDetalleProducto;
-
-        return $this;
-    }
-
-    public function getIdLote(): ?TblLote
-    {
-        return $this->idLote;
-    }
-
-    public function setIdLote(?TblLote $idLote): self
-    {
-        $this->idLote = $idLote;
 
         return $this;
     }

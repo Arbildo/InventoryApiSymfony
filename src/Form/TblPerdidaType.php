@@ -17,7 +17,6 @@ class TblPerdidaType extends AbstractType
             ->add('descripcion')
             ->add('estado')
             ->add('idDetalleProducto')
-            ->add('idLote')
         ;
     }
 

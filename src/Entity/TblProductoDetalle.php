@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TblProductoDetalle
  *
- * @ORM\Table(name="tbl_producto_detalle", indexes={@ORM\Index(name="fk_estado_id", columns={"estado"}), @ORM\Index(name="id_producto", columns={"ID_PRODUCTO"}), @ORM\Index(name="ID_LOTE", columns={"ID_LOTE"})})
+ * @ORM\Table(name="tbl_producto_detalle", indexes={@ORM\Index(name="ID_LOTE", columns={"ID_LOTE"}), @ORM\Index(name="id_producto", columns={"ID_PRODUCTO"}), @ORM\Index(name="fk_estado_id", columns={"estado"})})
  * @ORM\Entity
  */
 class TblProductoDetalle
@@ -54,7 +54,7 @@ class TblProductoDetalle
      *
      * @ORM\ManyToOne(targetEntity="TblProductoDetalleEstado")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="estado", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="estado", referencedColumnName="id")
      * })
      */
     private $estado;
