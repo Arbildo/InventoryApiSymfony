@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\TblPerdida;
+use App\Entity\TblPerdidaEstado;
+use App\Entity\TblProductoDetalle;
 use App\Form\TblPerdidaType;
 use App\Repository\TblPerdidaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +20,8 @@ use Symfony\Component\Validator\Constraints\DateTime;
  */
 class TblPerdidaController extends AbstractController
 {
+    const PENDIENTE_STATE = 1;
+
     /**
      * @Route("/", name="tbl_perdida_index", methods={"GET"})
      */
@@ -91,6 +95,37 @@ class TblPerdidaController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/{idPerdida}/aprove", name="tbl_perdida_edit", methods={"PUT"})
+     */
+    public function aprove(Request $request, TblPerdida $tblPerdida, SerializerInterface $serializer): Response
+    {
+        $data = json_decode($request->getContent(),true);
+        $em = $this->getDoctrine()->getManager();
+        $estado       = $data['estado'];
+        $tblPerdidaEstado = $em->find(TblPerdidaEstado::class, $estado);
+        $tblProductoDetalle = $em->find(TblProductoDetalle::class, $tblPerdida->getIdDetalleProducto()->getIdProductoDetalle());
+        if ($tblPerdida->getEstado() == self::PENDIENTE_STATE){
+        $tblPerdida->getCantidad();
+        $tblProductoDetalle->getStockActual();
+        $newStock = $this->reduceStock($tblPerdida->getCantidad(), $tblProductoDetalle->getStockActual());
+        $tblProductoDetalle->setStockActual($newStock);
+        $tblPerdida->setEstado($tblPerdidaEstado);
+        $em->persist($tblPerdida);
+        $em->persist($tblProductoDetalle);
+        $em->flush();
+        }
+        $result = $serializer->serialize($data, 'json',
+            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
+        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
+        return $response;
+    }
+
+    private function reduceStock ($tblPerdidaCantidad, $stockActual){
+
+       return $stockActual-$tblPerdidaCantidad;
+
+    }
     /**
      * @Route("/{idPerdida}", name="tbl_perdida_delete", methods={"DELETE"})
      */

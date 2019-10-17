@@ -86,9 +86,9 @@ class TblPerdida
         return $this;
     }
 
-    public function getFecha(): ?\DateTimeInterface
+    public function getFecha(): String
     {
-        return $this->fecha;
+        return date("F jS, Y, H:i", $this->fecha->getTimestamp());
     }
 
     public function setFecha(\DateTimeInterface $fecha): self

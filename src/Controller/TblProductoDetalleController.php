@@ -29,8 +29,7 @@ class TblProductoDetalleController extends AbstractController
         parse_str($request->getQueryString(), $array);
         $result = $serializer->serialize($tblProductoDetalleRepository->findBy($array), 'json',
             ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
-        $response = new Response();
-        $response->setContent($result);
+        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
         return $response;
 
     }

@@ -38,7 +38,7 @@ class TblLote
     /**
      * @var \DateTime|null
      *
-     * @ORM\Column(name="FECHA_CREACION", type="date", nullable=true)
+     * @ORM\Column(name="FECHA_CREACION", type="datetime", nullable=true)
      */
     private $fechaCreacion;
 
@@ -81,9 +81,9 @@ class TblLote
         return $this;
     }
 
-    public function getFechaCreacion(): ?\DateTimeInterface
+    public function getFechaCreacion(): String
     {
-        return $this->fechaCreacion;
+        return date("F jS, Y", $this->fechaCreacion->getTimestamp());
     }
 
     public function setFechaCreacion(?\DateTimeInterface $fechaCreacion): self

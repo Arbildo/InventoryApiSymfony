@@ -32,6 +32,17 @@ class TblClienteController extends AbstractController
     }
 
     /**
+     * @Route("/doc/{numeroDoc}", name="tbl_cliente_doc", methods={"GET"})
+     */
+    public function getByDocumentNumber(TblCliente $tblCliente, SerializerInterface $serializer): Response
+    {
+        $ignoredAttributes = ['__initializer__', '__cloner__', '__isInitialized__'];
+        $result = $serializer->serialize($tblCliente, 'json',['ignored_attributes' => $ignoredAttributes]);
+        $response = new Response($result, 200, ['Content-Type' => 'application/json']);
+        return $response;
+    }
+
+    /**
      * @Route("/new", name="tbl_cliente_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
