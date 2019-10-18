@@ -8,6 +8,7 @@ use App\Repository\TblClienteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\EventListener\ValidateRequestListener;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -19,6 +20,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class TblClienteController extends AbstractController
 {
+    const HEADERS = ['Content-Type'=> 'application/json'];
     /**
      * @Route("/", name="tbl_cliente_index", methods={"GET"})
      */
@@ -27,7 +29,7 @@ class TblClienteController extends AbstractController
         parse_str($request->getQueryString(), $array);
         $result = $serializer->serialize($tblClienteRepository->findBy($array), 'json',
             ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
-        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
+        $response = new Response($result, 200,self::HEADERS );
         return $response;
     }
 
@@ -37,8 +39,8 @@ class TblClienteController extends AbstractController
     public function getByDocumentNumber(TblCliente $tblCliente, SerializerInterface $serializer): Response
     {
         $ignoredAttributes = ['__initializer__', '__cloner__', '__isInitialized__'];
-        $result = $serializer->serialize($tblCliente, 'json',['ignored_attributes' => $ignoredAttributes]);
-        $response = new Response($result, 200, ['Content-Type' => 'application/json']);
+        $result = $serializer->serialize([$tblCliente], 'json',['ignored_attributes' => $ignoredAttributes]);
+        $response = new Response($result, 200, self::HEADERS);
         return $response;
     }
 

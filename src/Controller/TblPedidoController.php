@@ -26,10 +26,12 @@ class TblPedidoController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="tbl_pedido_new", methods={"GET","POST"})
+     * @Route("/new", name="tbl_pedido_new", methods={"POST"})
      */
     public function new(Request $request): Response
     {
+        $data               = json_decode($request->getContent(),true);
+        $em                 = $this->getDoctrine()->getManager();
         $tblPedido = new TblPedido();
         $form = $this->createForm(TblPedidoType::class, $tblPedido);
         $form->handleRequest($request);
