@@ -2,10 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\TblDetallePedido;
 use App\Entity\TblPedido;
+use App\Entity\TblProductoDetalle;
+use App\Form\TblDetallePedidoType;
 use App\Form\TblPedidoType;
+use App\Form\TblProveedorType;
 use App\Repository\TblPedidoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,22 +37,30 @@ class TblPedidoController extends AbstractController
     {
         $data               = json_decode($request->getContent(),true);
         $em                 = $this->getDoctrine()->getManager();
+        $compraDetail = $data['compra'];
+        unset($data['compra']);
         $tblPedido = new TblPedido();
         $form = $this->createForm(TblPedidoType::class, $tblPedido);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($tblPedido);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('tbl_pedido_index');
+        $form->submit($data);
+        $em->persist($tblPedido);
+        $em->flush();
+        $idPedido= $tblPedido->getIdPedido();
+        if (is_numeric($idPedido)){
+            foreach ($compraDetail as $compra){
+            $tblDetallePedido = new TblDetallePedido();
+            $tblDetallePedido->setEstado(1);
+            $tblDetallePedido->setPrecio($compra['precio']);
+            $tblDetallePedido->setCantidad($compra['cantidad']);
+            $tblProductoDetalle    = $em->find(TblProductoDetalle::class, $compra['idDetalleProducto']);
+            $tblDetallePedido->setIdProductoDetalle($tblProductoDetalle);
+            $tblDetallePedido->setIdPedido($tblPedido);
+            $em->persist($tblDetallePedido);
+            $em->flush();
+            }
         }
+        $response = new JsonResponse($data, 200);
+        return $response;
 
-        return $this->render('tbl_pedido/new.html.twig', [
-            'tbl_pedido' => $tblPedido,
-            'form' => $form->createView(),
-        ]);
     }
 
     /**

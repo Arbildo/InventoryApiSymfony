@@ -21,61 +21,6 @@ class TblPedido
      */
     private $idPedido;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="CODIGO", type="string", length=200, nullable=false)
-     */
-    private $codigo;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="FECHA_PEDIDO", type="date", nullable=false)
-     */
-    private $fechaPedido;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="HORA_PEDIDO", type="time", nullable=false)
-     */
-    private $horaPedido;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="FECHA_ENTREGA", type="date", nullable=false)
-     */
-    private $fechaEntrega;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="FECHA_ATENCION", type="date", nullable=false)
-     */
-    private $fechaAtencion;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="SUBTOTAL", type="decimal", precision=12, scale=2, nullable=false)
-     */
-    private $subtotal;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="CANTIDAD", type="integer", nullable=false)
-     */
-    private $cantidad;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="FINALIZADO", type="integer", nullable=false, options={"comment"="0=SIN FINALIZAR,1=FINALIZADO"})
-     */
-    private $finalizado;
 
     /**
      * @var int
@@ -83,23 +28,6 @@ class TblPedido
      * @ORM\Column(name="ESTADO", type="integer", nullable=false, options={"comment"="4=pendiente,5=completo,6=incompleto,7=anulado,11=atendido,12=atendido fuera de tiempo, 14=incometo fuera de tiempo"})
      */
     private $estado;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="ESTADO_COMPROBANTE", type="integer", nullable=false, options={"comment"="4=pendiente,5=completo,6=incompleto"})
-     */
-    private $estadoComprobante;
-
-    /**
-     * @var \TblUsuario
-     *
-     * @ORM\ManyToOne(targetEntity="TblUsuario")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_USUARIO_ASIGNADO", referencedColumnName="ID_USUARIO")
-     * })
-     */
-    private $idUsuarioAsignado;
 
     /**
      * @var \TblCliente

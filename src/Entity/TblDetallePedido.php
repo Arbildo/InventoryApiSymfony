@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TblDetallePedido
  *
- * @ORM\Table(name="tbl_detalle_pedido", indexes={@ORM\Index(name="ID_PRODUCTO_DETALLE", columns={"ID_PRODUCTO_DETALLE"}), @ORM\Index(name="ID_PEDIDO", columns={"ID_PEDIDO"}), @ORM\Index(name="ID_LOTE", columns={"ID_LOTE"})})
+ * @ORM\Table(name="tbl_detalle_pedido", indexes={@ORM\Index(name="ID_PRODUCTO_DETALLE", columns={"ID_PRODUCTO_DETALLE"}), @ORM\Index(name="ID_PEDIDO", columns={"ID_PEDIDO"})})
  * @ORM\Entity
  */
 class TblDetallePedido
@@ -61,16 +61,6 @@ class TblDetallePedido
      * })
      */
     private $idProductoDetalle;
-
-    /**
-     * @var \TblLote
-     *
-     * @ORM\ManyToOne(targetEntity="TblLote")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_LOTE", referencedColumnName="ID_LOTE")
-     * })
-     */
-    private $idLote;
 
     public function getIdDetallePedido(): ?int
     {
@@ -136,18 +126,5 @@ class TblDetallePedido
 
         return $this;
     }
-
-    public function getIdLote(): ?TblLote
-    {
-        return $this->idLote;
-    }
-
-    public function setIdLote(?TblLote $idLote): self
-    {
-        $this->idLote = $idLote;
-
-        return $this;
-    }
-
 
 }
