@@ -47,14 +47,14 @@ class TblProductoController extends AbstractController
     {
         $data            = json_decode($request->getContent(),true);
         $em                 = $this->getDoctrine()->getManager();
-        $tipoProducto       = $data['tipo'];
-        $unidadMedida       = $data['unidad'];
+        $tipoProducto       = $data['idTipo'];
+        $unidadMedida       = $data['idUnidad'];
         $tblProducto        = new TblProducto();
         $tblTipoProducto    = $em->find(TblTipoProducto::class, $tipoProducto);
         $tblUnidadMedida    = $em->find(TblUnidadMedida::class, $unidadMedida);
 
-        $tblProducto->setTipo($tblTipoProducto);
-        $tblProducto->setUnidad($tblUnidadMedida);
+        $tblProducto->setIdTipo($tblTipoProducto);
+        $tblProducto->setIdUnidad($tblUnidadMedida);
 
         $form = $this->createForm(TblProductoType::class, $tblProducto);
         $form->submit($data);

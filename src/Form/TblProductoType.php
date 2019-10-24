@@ -16,8 +16,8 @@ class TblProductoType extends AbstractType
             ->add('codigo')
             ->add('descripcion')
             ->add('estado')
-            ->add('tipo',   TblTipoProductoType::class)
-            ->add('unidad', TblUnidadMedidaType::class)
+            ->add('idTipo',   TblTipoProductoType::class)
+            ->add('idUnidad', TblUnidadMedidaType::class)
             ->add('estado')
         ;
     }

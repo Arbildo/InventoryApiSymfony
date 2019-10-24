@@ -43,13 +43,6 @@ class TblProducto
     private $descripcion;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="IMAGEN", type="text", length=65535, nullable=false)
-     */
-    private $imagen;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="ESTADO", type="integer", nullable=false)
@@ -113,18 +106,6 @@ class TblProducto
     public function setDescripcion(string $descripcion): self
     {
         $this->descripcion = $descripcion;
-
-        return $this;
-    }
-
-    public function getImagen(): ?string
-    {
-        return $this->imagen;
-    }
-
-    public function setImagen(string $imagen): self
-    {
-        $this->imagen = $imagen;
 
         return $this;
     }

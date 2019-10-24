@@ -105,7 +105,7 @@ class TblPerdidaController extends AbstractController
         $estado       = $data['estado'];
         $tblPerdidaEstado = $em->find(TblPerdidaEstado::class, $estado);
         $tblProductoDetalle = $em->find(TblProductoDetalle::class, $tblPerdida->getIdDetalleProducto()->getIdProductoDetalle());
-        if ($tblPerdida->getEstado() == self::PENDIENTE_STATE){
+        if ($tblPerdida->getEstado()->getId() == self::PENDIENTE_STATE){
         $tblPerdida->getCantidad();
         $tblProductoDetalle->getStockActual();
         $newStock = $this->reduceStock($tblPerdida->getCantidad(), $tblProductoDetalle->getStockActual());
