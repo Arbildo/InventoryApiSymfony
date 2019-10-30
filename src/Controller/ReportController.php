@@ -53,8 +53,9 @@ class ReportController extends AbstractController
                     'idProductoDetalle' => $productDetail->getidProductoDetalle(),
                     'stockInicial' => $productDetail->getStockInicial(),
                     'producto' => $productDetail->getidProducto()->getNombre(),
-                    'Losing' => [],
-                    'Total' => [],
+                    'losing' => [],
+                    'total' => 0,
+                    'exactitud' => '100.00 %',
                 ];
             } else {
                 $losingProcessed = $this->processLosing($productLose);
@@ -62,8 +63,9 @@ class ReportController extends AbstractController
                     'idProductoDetalle' => $productDetail->getidProductoDetalle(),
                     'stockInicial' => $productDetail->getStockInicial(),
                     'producto' => $productDetail->getidProducto()->getNombre(),
-                    'Losing' => $losingProcessed['losing'],
-                    'Total' => $losingProcessed['total'],
+                    'losing' => $losingProcessed['losing'],
+                    'total' => $losingProcessed['total'],
+                    'exactitud' => $this->getInventoryPrecision($productDetail->getStockInicial(), $losingProcessed['total'] )
                 ];
             }
         }
@@ -74,7 +76,11 @@ class ReportController extends AbstractController
         ];
         return $data;
     }
-
+    private function getInventoryPrecision($stockInicial, $cantidadPerdidas)
+    {
+        $porcentaje = round((1- $cantidadPerdidas/$stockInicial) * 100,2);
+        return "{$porcentaje} %";
+    }
     private function processLosing($losing)
     {
         $total = 0;
