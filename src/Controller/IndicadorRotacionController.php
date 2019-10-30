@@ -19,22 +19,22 @@ use Symfony\Component\Serializer\SerializerInterface;
 /**
  * @Route("/inventory", name="reports")
  */
-class ReportController extends AbstractController
+class IndicadorRotacionController extends AbstractController
 {
 
     const ATENDIDO = 2;
     /**
-     * @Route("/exactitud/lote/{idLote}", name="exactitud_por_lote", methods={"GET"})
+     * @Route("/rotacion/lote/{idLote}", name="exactitud_por_lote", methods={"GET"})
      */
-    public function InventoryPresitionByLote(TblLote $tblLote, Request $request, SerializerInterface $serializer): Response
+    public function InventoryRotationByLote(TblLote $tblLote, Request $request, SerializerInterface $serializer): Response
     {
         $lote = $tblLote;
         $idLote = $tblLote->getIdLote();
         $em             = $this->getDoctrine()->getManager();
         $productoDetalle    = $em->getRepository(TblProductoDetalle::class);
         $productDetailListByLote = $productoDetalle->findBy(['idLote' => $idLote]);
-        $productLosingRepository    = $em->getRepository(TblPerdida::class);
-        $result = $this->processData($productLosingRepository, $productDetailListByLote ,  $lote);
+        $productDetaildOrder    = $em->getRepository(TblDetallePedido::class);
+        $result = $this->processData($productDetaildOrder, $productDetailListByLote ,  $lote);
 
         $result = $serializer->serialize($result, 'json',
             ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
@@ -43,29 +43,29 @@ class ReportController extends AbstractController
 
     }
 
-    private function processData($productLosingRepository, $productsDetail, $lote)
+    private function processData($productDetaildOrder, $productsDetail, $lote)
     {
         $detail = [];
         foreach ($productsDetail as $productDetail) {
-            $productLose = $productLosingRepository->findBy(['idDetalleProducto' => $productDetail->getidProductoDetalle(), 'estado' => self::ATENDIDO]);
-            if (empty($productLose)) {
+            $productOrderDetails = $productDetaildOrder->findBy(['idProductoDetalle' => $productDetail->getidProductoDetalle()]);
+            if (empty($productOrderDetails)) {
                 $detail[] = [
                     'idProductoDetalle' => $productDetail->getidProductoDetalle(),
                     'stockInicial' => $productDetail->getStockInicial(),
                     'producto' => $productDetail->getidProducto()->getNombre(),
-                    'losing' => [],
+                    'detalles' => [],
                     'total' => 0,
-                    'exactitud' => '100.00 %',
+                    'rotacion' => '100.00 %',
                 ];
             } else {
-                $losingProcessed = $this->processLosing($productLose);
+                $ordersProcessed = $this->processOrderDetails($productOrderDetails);
                 $detail[] = [
                     'idProductoDetalle' => $productDetail->getidProductoDetalle(),
                     'stockInicial' => $productDetail->getStockInicial(),
                     'producto' => $productDetail->getidProducto()->getNombre(),
-                    'losing' => $losingProcessed['losing'],
-                    'total' => $losingProcessed['total'],
-                    'exactitud' => $this->getInventoryPrecision($productDetail->getStockInicial(), $losingProcessed['total'] )
+                    'detalles' => $ordersProcessed['details'],
+                    'total' => $ordersProcessed['total'],
+                    'rotacion' => $this->getInventoryRotation($productDetail->getStockInicial(), $ordersProcessed['total'])
                 ];
             }
         }
@@ -76,25 +76,24 @@ class ReportController extends AbstractController
         ];
         return $data;
     }
-    private function getInventoryPrecision($stockInicial, $cantidadPerdidas)
+    private function getInventoryRotation($stockInicial, $cantidadPerdidas)
     {
-        $porcentaje = round((1- $cantidadPerdidas/$stockInicial) * 100,2);
+        $porcentaje = round(($cantidadPerdidas/$stockInicial) * 100,2);
         return "{$porcentaje} %";
     }
-    private function processLosing($losing)
+    private function processOrderDetails($productOrderDetails)
     {
         $total = 0;
-        $losingData = [];
-        foreach ($losing as $lose) {
-            $losingData['losing'][] = [
-                'codigo' => $lose->getCodigo(),
-                'fecha' => $lose->getFecha(),
-                'descripcion' => $lose->getDescripcion(),
-                'cantidad' =>$lose->getCantidad(),
+        $oderData = [];
+        foreach ($productOrderDetails as $orderDetail) {
+            $oderData['details'][] = [
+                'idDetallePedido' => $orderDetail->getidDetallePedido(),
+                'cantidad' =>$orderDetail->getCantidad(),
+                'precio' =>$orderDetail->getPrecio(),
             ];
-            $total = $total + $lose->getCantidad();
+            $total = $total + $orderDetail->getCantidad();
         }
-        $losingData['total'] = $total;
-        return $losingData;
+        $oderData['total'] = $total;
+        return $oderData;
     }
 }
