@@ -9,22 +9,38 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/tbl/detalle/pedido")
  */
 class TblDetallePedidoController extends AbstractController
 {
+    const IGNORED_ATTRIBUTES = ['ignored_attributes' => ['__initializer__', '__cloner__', '__isInitialized__']];
+
     /**
      * @Route("/", name="tbl_detalle_pedido_index", methods={"GET"})
      */
-    public function index(TblDetallePedidoRepository $tblDetallePedidoRepository): Response
+    public function index(Request $request, TblDetallePedidoRepository $tblDetallePedidoRepository, SerializerInterface $serializer): Response
     {
-        return $this->render('tbl_detalle_pedido/index.html.twig', [
-            'tbl_detalle_pedidos' => $tblDetallePedidoRepository->findAll(),
-        ]);
+        parse_str($request->getQueryString(), $array);
+        $result = $serializer->serialize($tblDetallePedidoRepository->findBy($array), 'json',
+            self::IGNORED_ATTRIBUTES);
+        $response = new Response($result, 200, ['Content-Type' => 'application/json']);
+        return $response;
     }
 
+    /**
+     * @Route("/outputReport", name="tbl_detalle_pedido_byDate_grouped", methods={"GET"})
+     */
+    public function byDate(Request $request, TblDetallePedidoRepository $tblDetallePedidoRepository, SerializerInterface $serializer): Response
+    {
+        parse_str($request->getQueryString(), $array);
+        $result = $serializer->serialize($tblDetallePedidoRepository->findBy($array), 'json',
+            self::IGNORED_ATTRIBUTES);
+        $response = new Response($result, 200, ['Content-Type' => 'application/json']);
+        return $response;
+    }
     /**
      * @Route("/new", name="tbl_detalle_pedido_new", methods={"GET","POST"})
      */

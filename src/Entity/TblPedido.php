@@ -49,21 +49,16 @@ class TblPedido
      */
     private $idEncargado;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="FECHA_PEDIDO", type="datetime", nullable=false)
+     */
+    private $fechaPedido;
+
     public function getIdPedido(): ?int
     {
         return $this->idPedido;
-    }
-
-    public function getCodigo(): ?string
-    {
-        return $this->codigo;
-    }
-
-    public function setCodigo(string $codigo): self
-    {
-        $this->codigo = $codigo;
-
-        return $this;
     }
 
     public function getFechaPedido(): ?\DateTimeInterface
@@ -78,77 +73,6 @@ class TblPedido
         return $this;
     }
 
-    public function getHoraPedido(): ?\DateTimeInterface
-    {
-        return $this->horaPedido;
-    }
-
-    public function setHoraPedido(\DateTimeInterface $horaPedido): self
-    {
-        $this->horaPedido = $horaPedido;
-
-        return $this;
-    }
-
-    public function getFechaEntrega(): ?\DateTimeInterface
-    {
-        return $this->fechaEntrega;
-    }
-
-    public function setFechaEntrega(\DateTimeInterface $fechaEntrega): self
-    {
-        $this->fechaEntrega = $fechaEntrega;
-
-        return $this;
-    }
-
-    public function getFechaAtencion(): ?\DateTimeInterface
-    {
-        return $this->fechaAtencion;
-    }
-
-    public function setFechaAtencion(\DateTimeInterface $fechaAtencion): self
-    {
-        $this->fechaAtencion = $fechaAtencion;
-
-        return $this;
-    }
-
-    public function getSubtotal(): ?string
-    {
-        return $this->subtotal;
-    }
-
-    public function setSubtotal(string $subtotal): self
-    {
-        $this->subtotal = $subtotal;
-
-        return $this;
-    }
-
-    public function getCantidad(): ?int
-    {
-        return $this->cantidad;
-    }
-
-    public function setCantidad(int $cantidad): self
-    {
-        $this->cantidad = $cantidad;
-
-        return $this;
-    }
-
-    public function getFinalizado(): ?int
-    {
-        return $this->finalizado;
-    }
-
-    public function setFinalizado(int $finalizado): self
-    {
-        $this->finalizado = $finalizado;
-
-        return $this;
-    }
 
     public function getEstado(): ?int
     {
@@ -158,30 +82,6 @@ class TblPedido
     public function setEstado(int $estado): self
     {
         $this->estado = $estado;
-
-        return $this;
-    }
-
-    public function getEstadoComprobante(): ?int
-    {
-        return $this->estadoComprobante;
-    }
-
-    public function setEstadoComprobante(int $estadoComprobante): self
-    {
-        $this->estadoComprobante = $estadoComprobante;
-
-        return $this;
-    }
-
-    public function getIdUsuarioAsignado(): ?TblUsuario
-    {
-        return $this->idUsuarioAsignado;
-    }
-
-    public function setIdUsuarioAsignado(?TblUsuario $idUsuarioAsignado): self
-    {
-        $this->idUsuarioAsignado = $idUsuarioAsignado;
 
         return $this;
     }

@@ -14,20 +14,44 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/tbl/pedido")
  */
 class TblPedidoController extends AbstractController
 {
+    const IGNORED_ATTRIBUTES = ['ignored_attributes' => ['__initializer__', '__cloner__', '__isInitialized__']];
     /**
      * @Route("/", name="tbl_pedido_index", methods={"GET"})
      */
-    public function index(TblPedidoRepository $tblPedidoRepository): Response
+    public function index(Request $request, TblPedidoRepository $tblPedidoRepository, SerializerInterface $serializer): Response
     {
-        return $this->render('tbl_pedido/index.html.twig', [
-            'tbl_pedidos' => $tblPedidoRepository->findAll(),
-        ]);
+        parse_str($request->getQueryString(), $array);
+        if (array_key_exists('fechaPedido', $array)){
+            $date = explode('-',$array['fechaPedido']);
+            $result = $serializer->serialize($tblPedidoRepository->findByMonthYear($date[0], $date[1]), 'json',
+                self::IGNORED_ATTRIBUTES);
+            $response = new Response($result, 200, ['Content-Type' => 'application/json']);
+            return $response;
+        }
+        $result = $serializer->serialize($tblPedidoRepository->findBy($array), 'json',
+            self::IGNORED_ATTRIBUTES);
+        $response = new Response($result, 200, ['Content-Type' => 'application/json']);
+        return $response;
+    }
+
+    /**
+     * @Route("/byDate", name="tbl_pedido_by_date", methods={"GET"})
+     */
+    public function byDate(Request $request, TblPedidoRepository $tblPedidoRepository, SerializerInterface $serializer): Response
+    {
+        parse_str($request->getQueryString(), $array);
+        $date = explode('-',$array['fechaPedido']);
+        $result = $serializer->serialize($tblPedidoRepository->findByMonthYear($date[0], $date[1]), 'json',
+            self::IGNORED_ATTRIBUTES);
+            $response = new Response($result, 200, ['Content-Type' => 'application/json']);
+            return $response;
     }
 
     /**
