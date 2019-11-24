@@ -24,7 +24,7 @@ class IndicadorRotacionController extends AbstractController
 
     const ATENDIDO = 2;
     /**
-     * @Route("/rotacion/lote/{idLote}", name="exactitud_por_lote", methods={"GET"})
+     * @Route("/rotacion/lote/{idLote}", name="rotacion_por_lote", methods={"GET"})
      */
     public function InventoryRotationByLote(TblLote $tblLote, Request $request, SerializerInterface $serializer): Response
     {
