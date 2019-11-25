@@ -29,13 +29,6 @@ class TblPerdida
     private $codigo;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="FECHA", type="datetime", nullable=false)
-     */
-    private $fecha;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="CANTIDAD", type="integer", nullable=false)

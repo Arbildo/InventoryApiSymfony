@@ -14,12 +14,15 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/tbl/usuario")
  */
 class TblUsuarioController extends AbstractController
 {
+    const HEADERS = ['Content-Type'=> 'application/json'];
+
     /**
      * @Route("/", name="tbl_usuario_index", methods={"GET"})
      */
@@ -63,14 +66,11 @@ class TblUsuarioController extends AbstractController
     /**
      * @Route("/{idUsuario}", name="tbl_usuario_show", methods={"GET"})
      */
-    public function show(TblUsuario $tblUsuario): Response
+    public function show(TblUsuario $tblUsuario, SerializerInterface $serializer): Response
     {
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
-        $foo =$serializer->serialize($tblUsuario, 'json');
-        $response = new Response();
-        $response->setContent($foo);
+        $ignoredAttributes = ['__initializer__', '__cloner__', '__isInitialized__','password', 'usuario'];
+        $result = $serializer->serialize($tblUsuario, 'json',['ignored_attributes' => $ignoredAttributes]);
+        $response = new Response($result, 200, self::HEADERS);
 
         return $response;
     }
