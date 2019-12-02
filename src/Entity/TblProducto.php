@@ -43,9 +43,12 @@ class TblProducto
     private $descripcion;
 
     /**
-     * @var int
+     * @var \TblProductoEstado
      *
-     * @ORM\Column(name="ESTADO", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="TblProductoEstado")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_ESTADO", referencedColumnName="ID_ESTADO", nullable=false)
+     * })
      */
     private $estado;
 
@@ -110,12 +113,12 @@ class TblProducto
         return $this;
     }
 
-    public function getEstado(): ?int
+    public function getEstado(): ?TblProductoEstado
     {
         return $this->estado;
     }
 
-    public function setEstado(int $estado): self
+    public function setEstado(?TblProductoEstado $estado): self
     {
         $this->estado = $estado;
 

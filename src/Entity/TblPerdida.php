@@ -36,6 +36,13 @@ class TblPerdida
     private $cantidad;
 
     /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="FECHA", type="datetime", nullable=true)
+     */
+    private $fecha;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="DESCRIPCION", type="text", length=65535, nullable=false)
