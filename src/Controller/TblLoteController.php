@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\TblLote;
+use App\Entity\TblLoteEstado;
 use App\Form\TblLoteType;
+use App\Repository\TblLoteEstadoRepository;
 use App\Repository\TblLoteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,9 +31,19 @@ class TblLoteController extends AbstractController
         $response->setContent($result);
         return $response;
     }
-
     /**
-     * @Route("/new", name="tbl_lote_new", methods={"GET","POST"})
+     * @Route("/estados", name="tbl_lote_estado", methods={"GET"})
+     */
+    public function loteStates(Request $request ,TblLoteEstadoRepository $tblProductoEstadoRepository, SerializerInterface $serializer): Response
+    {
+        parse_str($request->getQueryString(), $array);
+        $result = $serializer->serialize($tblProductoEstadoRepository->findBy($array), 'json',
+            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
+        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
+        return $response;
+    }
+    /**
+     * @Route("/new", name="tbl_lote_new", methods={"POST"})
      */
     public function new(Request $request): Response
     {
@@ -60,23 +72,25 @@ class TblLoteController extends AbstractController
     }
 
     /**
-     * @Route("/{idLote}/edit", name="tbl_lote_edit", methods={"GET","POST"})
+     * @Route("/{idLote}/edit", name="tbl_lote_edit", methods={"PUT"})
+     * @throws \Exception
      */
     public function edit(Request $request, TblLote $tblLote): Response
     {
+        $request    = json_decode($request->getContent(), true);
+        $em         = $this->getDoctrine()->getManager();
+        $estado     = $request['estado'];
+        $newDate = $request['fechaVencimiento'];
+        $fechaVencimiento = new \DateTime($newDate);
+        $state      = $em->find(TblLoteEstado::class, $estado);
+        $tblLote->setEstado($state);
+        $tblLote->setFechaVencimiento($fechaVencimiento);
         $form = $this->createForm(TblLoteType::class, $tblLote);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('tbl_lote_index');
-        }
-
-        return $this->render('tbl_lote/edit.html.twig', [
-            'tbl_lote' => $tblLote,
-            'form' => $form->createView(),
-        ]);
+        $form->submit($request);
+        $em->persist($tblLote);
+        $em->flush();
+        $response = new JsonResponse(['LoteId' => $tblLote->getIdLote()], 200);
+        return $response;
     }
 
     /**

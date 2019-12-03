@@ -69,9 +69,12 @@ class TblLote
         return $this;
     }
 
-    public function getFechaVencimiento(): ?\DateTimeInterface
+    public function getFechaVencimiento(): String
     {
-        return $this->fechaVencimiento;
+        if (is_null($this->fechaVencimiento)){
+            return "";
+        }
+        return date("Y-m-d", $this->fechaVencimiento->getTimestamp());
     }
 
     public function setFechaVencimiento(?\DateTimeInterface $fechaVencimiento): self
@@ -81,9 +84,13 @@ class TblLote
         return $this;
     }
 
+
     public function getFechaCreacion(): String
     {
-        return date("F jS, Y", $this->fechaCreacion->getTimestamp());
+        if (is_null($this->fechaCreacion)){
+            return "";
+        }
+        return date("Y-m-d", $this->fechaCreacion->getTimestamp());
     }
 
     public function setFechaCreacion(?\DateTimeInterface $fechaCreacion): self

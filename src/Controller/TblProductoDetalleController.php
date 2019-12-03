@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\TblLote;
+use App\Entity\TblProducto;
 use App\Entity\TblProductoDetalle;
+use App\Entity\TblProductoDetalleEstado;
 use App\Form\TblProductoDetalleType;
+use App\Repository\TblProductoDetalleEstadoRepository;
 use App\Repository\TblProductoDetalleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,7 +34,18 @@ class TblProductoDetalleController extends AbstractController
             ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
         $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
         return $response;
+    }
 
+    /**
+     * @Route("/estados", name="tbl_productos_detalles_estado", methods={"GET"})
+     */
+    public function productDetailsStates(Request $request ,TblProductoDetalleEstadoRepository $tblProductoDetalleEstadoRepository, SerializerInterface $serializer): Response
+    {
+        parse_str($request->getQueryString(), $array);
+        $result = $serializer->serialize($tblProductoDetalleEstadoRepository->findBy($array), 'json',
+            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
+        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
+        return $response;
     }
 
     /**
@@ -64,23 +78,26 @@ class TblProductoDetalleController extends AbstractController
     }
 
     /**
-     * @Route("/{idProductoDetalle}/edit", name="tbl_producto_detalle_edit", methods={"GET","POST"})
+     * @Route("/{idProductoDetalle}/edit", name="tbl_producto_detalle_edit", methods={"PUT"})
      */
-    public function edit(Request $request, TblProductoDetalle $tblProductoDetalle): Response
+    public function edit(Request $request, TblProductoDetalle $tblProductoDetalle ): Response
     {
+
+        $request                =   json_decode($request->getContent(),true);
+        $estado                 = $request['estado'];
+        $lote                   = $request['idLote'];
+        $request['idProducto']  = $tblProductoDetalle->getIdProducto()->getIdProducto();
+        $em                 = $this->getDoctrine()->getManager();
+        $lote               = $em->find(TblLote::class, $lote);
+        $estado             = $em->find(TblProductoDetalleEstado::class, $estado);
+        $tblProductoDetalle->setEstado($estado);
+        $tblProductoDetalle->setIdLote($lote);
         $form = $this->createForm(TblProductoDetalleType::class, $tblProductoDetalle);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('tbl_producto_detalle_index');
-        }
-
-        return $this->render('tbl_producto_detalle/edit.html.twig', [
-            'tbl_producto_detalle' => $tblProductoDetalle,
-            'form' => $form->createView(),
-        ]);
+        $form->submit($request);
+        $em->persist($tblProductoDetalle);
+        $em->flush();
+        $response = new JsonResponse(['ProductDetail' => $tblProductoDetalle->getIdProductoDetalle()], 200);
+        return $response;
     }
 
     /**
