@@ -15,6 +15,7 @@ class TblPedidoType extends AbstractType
             ->add('estado')
             ->add('idCliente')
             ->add('idEncargado')
+            ->add('total')
         ;
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\TblProductoEstadoRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -56,6 +57,13 @@ class TblPedido
      */
     private $fechaPedido;
 
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="TOTAL", type="float")
+     */
+    private $total;
+
     public function getIdPedido(): ?int
     {
         return $this->idPedido;
@@ -69,7 +77,6 @@ class TblPedido
     public function setFechaPedido(\DateTimeInterface $fechaPedido): self
     {
         $this->fechaPedido = $fechaPedido;
-
         return $this;
     }
 
@@ -109,6 +116,17 @@ class TblPedido
 
         return $this;
     }
+
+    public function getTotal(): float
+    {
+        return $this->total;
+    }
+
+    public function setTotal(float $total): void
+    {
+        $this->total = $total;
+    }
+
 
 
 }
