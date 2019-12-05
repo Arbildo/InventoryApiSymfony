@@ -75,7 +75,8 @@ class TblPedidoController extends AbstractController
             $tblDetallePedido->setEstado(1);
             $tblDetallePedido->setPrecio($compra['precio']);
             $tblDetallePedido->setCantidad($compra['cantidad']);
-            $tblProductoDetalle    = $em->find(TblProductoDetalle::class, $compra['idDetalleProducto']);
+            $tblProductoDetalle = $em->find(TblProductoDetalle::class, $compra['idDetalleProducto']);
+            $this->processProductDetail($tblProductoDetalle, $compra, $em);
             $tblDetallePedido->setIdProductoDetalle($tblProductoDetalle);
             $tblDetallePedido->setIdPedido($tblPedido);
             $em->persist($tblDetallePedido);
@@ -87,14 +88,13 @@ class TblPedidoController extends AbstractController
 
     }
 
-    /**
-     * @Route("/{idPedido}", name="tbl_pedido_show", methods={"GET"})
-     */
-    public function show(TblPedido $tblPedido): Response
+    private function processProductDetail(TblProductoDetalle $productDetail, $compra, $em)
     {
-        return $this->render('tbl_pedido/show.html.twig', [
-            'tbl_pedido' => $tblPedido,
-        ]);
+        $stockActual = $productDetail->getStockActual();
+        $newStock = $stockActual-$compra['cantidad'];
+        $productDetail->setStockActual($newStock);
+
+
     }
 
     /**

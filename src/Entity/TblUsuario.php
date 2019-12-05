@@ -71,9 +71,12 @@ class TblUsuario
     private $foto;
 
     /**
-     * @var int
+     * @var \TblUsuarioEstado
      *
-     * @ORM\Column(name="ESTADO", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="TblUsuarioEstado")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ESTADO", referencedColumnName="ID_ESTADO")
+     * })
      */
     private $estado;
 
@@ -176,12 +179,12 @@ class TblUsuario
         return $this;
     }
 
-    public function getEstado(): ?int
+    public function getEstado(): ?TblUsuarioEstado
     {
         return $this->estado;
     }
 
-    public function setEstado(int $estado): self
+    public function setEstado(TblUsuarioEstado $estado): self
     {
         $this->estado = $estado;
 
@@ -196,7 +199,6 @@ class TblUsuario
     public function setIdCargo(?TblCargo $idCargo): self
     {
         $this->idCargo = $idCargo;
-
         return $this;
     }
 

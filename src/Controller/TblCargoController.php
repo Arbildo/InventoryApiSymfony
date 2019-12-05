@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/tbl/cargo")
@@ -18,11 +19,13 @@ class TblCargoController extends AbstractController
     /**
      * @Route("/", name="tbl_cargo_index", methods={"GET"})
      */
-    public function index(TblCargoRepository $tblCargoRepository): Response
+    public function index(Request $request, TblCargoRepository $tblCargoRepository, SerializerInterface $serializer): Response
     {
-        return $this->render('tbl_cargo/index.html.twig', [
-            'tbl_cargos' => $tblCargoRepository->findAll(),
-        ]);
+        parse_str($request->getQueryString(), $array);
+        $result = $serializer->serialize($tblCargoRepository->findBy($array), 'json',
+            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
+        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
+        return $response;
     }
 
     /**

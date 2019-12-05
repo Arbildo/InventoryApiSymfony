@@ -147,6 +147,6 @@ class TblPerdidaController extends AbstractController
 
     private function generateProductLoseCode($id)
     {
-        return "REPORT-{$id}";
+        return "PERDIDA-{$id}";
     }
 }

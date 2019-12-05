@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\TblCargo;
 use App\Entity\TblUsuario;
+use App\Entity\TblUsuarioEstado;
 use App\Form\TblUsuarioType;
+use App\Repository\TblUsuarioEstadoRepository;
 use App\Repository\TblUsuarioRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,17 +28,25 @@ class TblUsuarioController extends AbstractController
     /**
      * @Route("/", name="tbl_usuario_index", methods={"GET"})
      */
-    public function index(TblUsuarioRepository $tblUsuarioRepository): Response
+    public function index(Request $request, TblUsuarioRepository $tblUsuarioRepository, SerializerInterface $serializer): Response
     {
-        $encoders = [new JsonEncoder()];
-        $normalizers = new ObjectNormalizer();
-        $normalizers->setIgnoredAttributes(["__initializer__", "__cloner__","__isInitialized__","password"] );
-        $serializer = new Serializer([$normalizers], $encoders);
-        $result =$serializer->serialize($tblUsuarioRepository->findAll(), 'json');
-        $response = new Response();
-        $response->setContent($result);
+        parse_str($request->getQueryString(), $array);
+        $result = $serializer->serialize($tblUsuarioRepository->findBy($array), 'json',
+            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
+        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
         return $response;
+    }
 
+    /**
+     * @Route("/estado", name="tbl_usuario_estado", methods={"GET"})
+     */
+    public function userStates(Request $request, TblUsuarioEstadoRepository $tblUsuarioEstadoRepository, SerializerInterface $serializer): Response
+    {
+        parse_str($request->getQueryString(), $array);
+        $result = $serializer->serialize($tblUsuarioEstadoRepository->findBy($array), 'json',
+            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
+        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
+        return $response;
     }
 
     /**
@@ -48,13 +58,9 @@ class TblUsuarioController extends AbstractController
         $em             = $this->getDoctrine()->getManager();
         $cargoId        = $data['cargo'];
         $tblTipoCargo    = $em->find(TblCargo::class, $cargoId);
-
         $tblUsuario        = new TblUsuario();
-
         $tblUsuario->setCargo($tblTipoCargo);
-
         $form = $this->createForm(TblUsuarioType::class, $tblUsuario);
-
         $form->submit($data);
         $em->persist($tblUsuario);
         $em->flush();
@@ -84,11 +90,14 @@ class TblUsuarioController extends AbstractController
         if (!$user) {
             throw $this->createNotFoundException(sprintf('Error "%s"', $user));
         }
-        $data = json_decode($request->getContent(), true);
-        $em = $this->getDoctrine()->getManager();
-        $cargoId       = $data['cargo'];
-        $tblTipoCargo    = $em->find(TblCargo::class, $cargoId);
-        $user->setCargo($tblTipoCargo);
+        $data           = json_decode($request->getContent(), true);
+        $em             = $this->getDoctrine()->getManager();
+        $cargoId        = $data['idCargo'];
+        $estado         = $data['estado'];
+        $tblTipoCargo       = $em->find(TblCargo::class, $cargoId);
+        $tblUsuarioEstado   = $em->find(TblUsuarioEstado::class, $estado);
+        $user->setIdCargo($tblTipoCargo);
+        $user->setEstado($tblUsuarioEstado);
         $form = $this->createForm(TblUsuarioType::class, $user);
         $form->submit($data);
         $em->persist($user);
