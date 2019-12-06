@@ -9,6 +9,7 @@ use App\Form\TblUsuarioType;
 use App\Repository\TblUsuarioEstadoRepository;
 use App\Repository\TblUsuarioRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Tests\DependencyInjection\Fixtures\UserProvider\DummyProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,14 +55,21 @@ class TblUsuarioController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $data           = json_decode($request->getContent(),true);
-        $em             = $this->getDoctrine()->getManager();
-        $cargoId        = $data['cargo'];
-        $tblTipoCargo    = $em->find(TblCargo::class, $cargoId);
-        $tblUsuario        = new TblUsuario();
+        $data                   = json_decode($request->getContent(),true);
+        $tblUsuario             = new TblUsuario();
+        $em                     = $this->getDoctrine()->getManager();
+        $cargoId                = $data['idCargo'];
+        $estado                 = $data['estado'];
+        $tblTipoCargo           = $em->find(TblCargo::class, $cargoId);
+        $tblUsuarioEstado       = $em->find(TblUsuarioEstado::class, $estado);
         $tblUsuario->setCargo($tblTipoCargo);
+        $tblUsuario->setEstado($tblUsuarioEstado);
         $form = $this->createForm(TblUsuarioType::class, $tblUsuario);
-        $form->submit($data);
+        $form->submit($data, false);
+        $em->persist($tblUsuario);
+        $em->flush();
+        $code = $this->generateClientCode($tblUsuario->getIdUsuario());
+        $tblUsuario->setCodigo($code);
         $em->persist($tblUsuario);
         $em->flush();
         $data = $this->serializeUser($tblUsuario);
@@ -96,10 +104,10 @@ class TblUsuarioController extends AbstractController
         $estado         = $data['estado'];
         $tblTipoCargo       = $em->find(TblCargo::class, $cargoId);
         $tblUsuarioEstado   = $em->find(TblUsuarioEstado::class, $estado);
-        $user->setIdCargo($tblTipoCargo);
+        $user->setCargo($tblTipoCargo);
         $user->setEstado($tblUsuarioEstado);
         $form = $this->createForm(TblUsuarioType::class, $user);
-        $form->submit($data);
+        $form->submit($data, false);
         $em->persist($user);
         $em->flush();
         $data = $this->serializeUser($user);
@@ -151,6 +159,12 @@ class TblUsuarioController extends AbstractController
         return [
             'UserID' => $usuario->getIdUsuario(),
         ];
+    }
+
+    private function generateClientCode($clientCode)
+    {
+        return "CLI-{$clientCode}";
+
     }
 }
 

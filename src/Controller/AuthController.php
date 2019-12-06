@@ -18,6 +18,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 class AuthController extends AbstractController
 {
     const IGNORED_VALUES = ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__', 'usuario', 'password']];
+    const ACTIVE_USER = 1;
 
     /**
      * @Route("/login", name="login")
@@ -26,6 +27,7 @@ class AuthController extends AbstractController
     {
         $request = $request->getContent();
         $data = json_decode($request,true);
+        $data['estado'] = self::ACTIVE_USER;
         $em             = $this->getDoctrine()->getManager();
         $usuarioRepository    = $em->getRepository(TblUsuario::class);
         $userInfo = $usuarioRepository->findOneBy($data);

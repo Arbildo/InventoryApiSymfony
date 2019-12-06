@@ -191,12 +191,12 @@ class TblUsuario
         return $this;
     }
 
-    public function getIdCargo(): ?TblCargo
+    public function getCargo(): ?TblCargo
     {
         return $this->idCargo;
     }
 
-    public function setIdCargo(?TblCargo $idCargo): self
+    public function setCargo(?TblCargo $idCargo): self
     {
         $this->idCargo = $idCargo;
         return $this;
