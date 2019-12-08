@@ -45,28 +45,6 @@ class TblPedidoController extends AbstractController
     }
 
     /**
-     * @Route("/report", name="tbl_pedido_by_date", methods={"GET"})
-     */
-    public function byDate(Request $request, TblPedidoRepository $tblPedidoRepository, SerializerInterface $serializer): Response
-    {
-        parse_str($request->getQueryString(), $array);
-        $date                           = $array['fechaPedido'];
-        $dt                             = new \DateTime($date);
-        $date                           = $dt->format("Y-m-d H:i:s");
-        $pedidos                        = $tblPedidoRepository->findByMonthYearUnixTime($date);
-        $em                             = $this->getDoctrine()->getManager();
-        $tblPedidoDetalleRepository     =   $em->getRepository(TblDetallePedido::class);
-        foreach ($pedidos as $pedido){
-            $orders= $tblPedidoDetalleRepository->findBy(['idPedido' => $pedido->getIdPedido()]);
-            foreach ($orders as $order){
-                $this->newArray[] = $order;
-            }
-        }
-        $result = $serializer->serialize($this->newArray, 'json',self::IGNORED_ATTRIBUTES);
-        $response = new Response($result, 200, ['Content-Type' => 'application/json']);
-            return $response;
-    }
-    /**
      * @Route("/dates", name="tbl_pedido_dates", methods={"GET"})
      */
     public function getDates(TblPedidoRepository $tblPedidoRepository, SerializerInterface $serializer): Response

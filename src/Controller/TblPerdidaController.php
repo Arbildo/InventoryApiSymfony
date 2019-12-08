@@ -35,20 +35,6 @@ class TblPerdidaController extends AbstractController
     }
 
     /**
-     * @Route("/report", name="tbl_perdidas_by_date", methods={"GET"})
-     */
-    public function byDate(Request $request, TblPerdidaRepository $tblPerdidaRepository, SerializerInterface $serializer): Response
-    {
-        parse_str($request->getQueryString(), $array);
-        $date                           = $array['fecha'];
-        $dt                             = new \DateTime($date);
-        $date                           = $dt->format("Y-m-d H:i:s");
-        $result = $serializer->serialize($tblPerdidaRepository->findByMonthYearUnixTime($date), 'json',self::IGNORED_ATTRIBUTES);
-        $response = new Response($result, 200, ['Content-Type' => 'application/json']);
-        return $response;
-    }
-
-    /**
      * @Route("/dates", name="tbl_perdida_dates", methods={"GET"})
      */
     public function getDates(TblPerdidaRepository $tblPerdidaRepository, SerializerInterface $serializer): Response
