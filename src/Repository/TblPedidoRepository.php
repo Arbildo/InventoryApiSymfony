@@ -31,6 +31,25 @@ class TblPedidoRepository extends ServiceEntityRepository
         return $qb->getQuery()->execute();
     }
 
+    public function findDates()
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p.fechaPedido');
+        return $qb->getQuery()->execute();
+    }
+
+    public function findByMonthYearUnixTime($unixTime)
+    {
+        $fromTime = new DateTime($unixTime);
+        $toTime = new DateTime($fromTime->format('Y-m-d H:i:s'). ' first day of next month');
+
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.fechaPedido >= :fromTime')
+            ->andWhere('p.fechaPedido < :toTime')
+            ->setParameter('fromTime', $fromTime)
+            ->setParameter('toTime', $toTime);
+        return $qb->getQuery()->execute();
+    }
     // /**
     //  * @return TblPedido[] Returns an array of TblPedido objects
     //  */

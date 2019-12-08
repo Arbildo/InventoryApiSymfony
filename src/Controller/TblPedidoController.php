@@ -9,6 +9,7 @@ use App\Form\TblDetallePedidoType;
 use App\Form\TblPedidoType;
 use App\Form\TblProveedorType;
 use App\Repository\TblPedidoRepository;
+use App\Repository\TblProductoEstadoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,8 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class TblPedidoController extends AbstractController
 {
+    private $newArray;
+
     const IGNORED_ATTRIBUTES = ['ignored_attributes' => ['__initializer__', '__cloner__', '__isInitialized__']];
     /**
      * @Route("/", name="tbl_pedido_index", methods={"GET"})
@@ -42,16 +45,44 @@ class TblPedidoController extends AbstractController
     }
 
     /**
-     * @Route("/byDate", name="tbl_pedido_by_date", methods={"GET"})
+     * @Route("/report", name="tbl_pedido_by_date", methods={"GET"})
      */
     public function byDate(Request $request, TblPedidoRepository $tblPedidoRepository, SerializerInterface $serializer): Response
     {
         parse_str($request->getQueryString(), $array);
-        $date = explode('-',$array['fechaPedido']);
-        $result = $serializer->serialize($tblPedidoRepository->findByMonthYear($date[0], $date[1]), 'json',
-            self::IGNORED_ATTRIBUTES);
-            $response = new Response($result, 200, ['Content-Type' => 'application/json']);
+        $date                           = $array['fechaPedido'];
+        $dt                             = new \DateTime($date);
+        $date                           = $dt->format("Y-m-d H:i:s");
+        $pedidos                        = $tblPedidoRepository->findByMonthYearUnixTime($date);
+        $em                             = $this->getDoctrine()->getManager();
+        $tblPedidoDetalleRepository     =   $em->getRepository(TblDetallePedido::class);
+        foreach ($pedidos as $pedido){
+            $orders= $tblPedidoDetalleRepository->findBy(['idPedido' => $pedido->getIdPedido()]);
+            foreach ($orders as $order){
+                $this->newArray[] = $order;
+            }
+        }
+        $result = $serializer->serialize($this->newArray, 'json',self::IGNORED_ATTRIBUTES);
+        $response = new Response($result, 200, ['Content-Type' => 'application/json']);
             return $response;
+    }
+    /**
+     * @Route("/dates", name="tbl_pedido_dates", methods={"GET"})
+     */
+    public function getDates(TblPedidoRepository $tblPedidoRepository, SerializerInterface $serializer): Response
+    {
+        $dates = [];
+        foreach ($tblPedidoRepository->findDates() as $date){
+            $dates[] = date("M Y", $date['fechaPedido']->getTimestamp());;
+        }
+
+        foreach ($dates as $index => $date){
+                $result[] = $date;
+        }
+        $format = array_unique($result);
+        $result = $serializer->serialize($format, 'json',self::IGNORED_ATTRIBUTES );
+        $response = new Response($result, 200, ['Content-Type' => 'application/json']);
+        return $response;
     }
 
     /**
@@ -65,6 +96,7 @@ class TblPedidoController extends AbstractController
         unset($data['compra']);
         $tblPedido = new TblPedido();
         $form = $this->createForm(TblPedidoType::class, $tblPedido);
+
         $form->submit($data);
         $em->persist($tblPedido);
         $em->flush();
@@ -76,7 +108,7 @@ class TblPedidoController extends AbstractController
             $tblDetallePedido->setPrecio($compra['precio']);
             $tblDetallePedido->setCantidad($compra['cantidad']);
             $tblProductoDetalle = $em->find(TblProductoDetalle::class, $compra['idDetalleProducto']);
-            $this->processProductDetail($tblProductoDetalle, $compra, $em);
+            $this->processProductDetail($tblProductoDetalle, $compra);
             $tblDetallePedido->setIdProductoDetalle($tblProductoDetalle);
             $tblDetallePedido->setIdPedido($tblPedido);
             $em->persist($tblDetallePedido);
@@ -88,34 +120,14 @@ class TblPedidoController extends AbstractController
 
     }
 
-    private function processProductDetail(TblProductoDetalle $productDetail, $compra, $em)
+    private function processProductDetail(TblProductoDetalle $productDetail, $compra)
     {
         $stockActual = $productDetail->getStockActual();
         $newStock = $stockActual-$compra['cantidad'];
         $productDetail->setStockActual($newStock);
 
-
     }
 
-    /**
-     * @Route("/{idPedido}/edit", name="tbl_pedido_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, TblPedido $tblPedido): Response
-    {
-        $form = $this->createForm(TblPedidoType::class, $tblPedido);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('tbl_pedido_index');
-        }
-
-        return $this->render('tbl_pedido/edit.html.twig', [
-            'tbl_pedido' => $tblPedido,
-            'form' => $form->createView(),
-        ]);
-    }
 
     /**
      * @Route("/{idPedido}", name="tbl_pedido_delete", methods={"DELETE"})

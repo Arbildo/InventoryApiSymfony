@@ -117,7 +117,7 @@ class TblPedido
         return $this;
     }
 
-    public function getTotal(): float
+    public function getTotal(): ?float
     {
         return $this->total;
     }

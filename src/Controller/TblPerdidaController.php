@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class TblPerdidaController extends AbstractController
 {
     const PENDIENTE_STATE = 1;
+    const IGNORED_ATTRIBUTES = ['ignored_attributes' => ['__initializer__', '__cloner__', '__isInitialized__']];
 
     /**
      * @Route("/", name="tbl_perdida_index", methods={"GET"})
@@ -28,12 +29,43 @@ class TblPerdidaController extends AbstractController
     public function index(Request $request, TblPerdidaRepository $tblPerdidaRepository, SerializerInterface $serializer): Response
     {
         parse_str($request->getQueryString(), $array);
-        $result = $serializer->serialize($tblPerdidaRepository->findBy($array), 'json',
-            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
+        $result = $serializer->serialize($tblPerdidaRepository->findBy($array), 'json',self::IGNORED_ATTRIBUTES);
         $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
         return $response;
     }
 
+    /**
+     * @Route("/report", name="tbl_perdidas_by_date", methods={"GET"})
+     */
+    public function byDate(Request $request, TblPerdidaRepository $tblPerdidaRepository, SerializerInterface $serializer): Response
+    {
+        parse_str($request->getQueryString(), $array);
+        $date                           = $array['fecha'];
+        $dt                             = new \DateTime($date);
+        $date                           = $dt->format("Y-m-d H:i:s");
+        $result = $serializer->serialize($tblPerdidaRepository->findByMonthYearUnixTime($date), 'json',self::IGNORED_ATTRIBUTES);
+        $response = new Response($result, 200, ['Content-Type' => 'application/json']);
+        return $response;
+    }
+
+    /**
+     * @Route("/dates", name="tbl_perdida_dates", methods={"GET"})
+     */
+    public function getDates(TblPerdidaRepository $tblPerdidaRepository, SerializerInterface $serializer): Response
+    {
+        $dates = [];
+        foreach ($tblPerdidaRepository->findDates() as $date){
+            $dates[] = date("M Y", $date['fecha']->getTimestamp());;
+        }
+
+        foreach ($dates as $index => $date){
+            $result[] = $date;
+        }
+        $format = array_unique($result);
+        $result = $serializer->serialize($format, 'json',self::IGNORED_ATTRIBUTES );
+        $response = new Response($result, 200, ['Content-Type' => 'application/json']);
+        return $response;
+    }
     /**
      * @Route("/new", name="tbl_perdida_new", methods={"GET","POST"})
      */

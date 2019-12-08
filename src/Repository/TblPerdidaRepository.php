@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use DateTime;
 use App\Entity\TblPerdida;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -19,6 +20,24 @@ class TblPerdidaRepository extends ServiceEntityRepository
         parent::__construct($registry, TblPerdida::class);
     }
 
+    public function findDates()
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p.fecha');
+        return $qb->getQuery()->execute();
+    }
+
+    public function findByMonthYearUnixTime($unixTime)
+    {
+        $fromTime = new DateTime($unixTime);
+        $toTime = new DateTime($fromTime->format('Y-m-d H:i:s'). ' first day of next month');
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.fecha >= :fromTime')
+            ->andWhere('p.fecha < :toTime')
+            ->setParameter('fromTime', $fromTime)
+            ->setParameter('toTime', $toTime);
+        return $qb->getQuery()->execute();
+    }
     // /**
     //  * @return TblPerdida[] Returns an array of TblPerdida objects
     //  */
