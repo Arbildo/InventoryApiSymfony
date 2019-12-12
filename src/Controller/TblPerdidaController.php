@@ -40,18 +40,18 @@ class TblPerdidaController extends AbstractController
     public function getDates(TblPerdidaRepository $tblPerdidaRepository, SerializerInterface $serializer): Response
     {
         $dates = [];
-        foreach ($tblPerdidaRepository->findDates() as $date){
+        foreach ($tblPerdidaRepository->findDates() as $date) {
             $dates[] = date("M Y", $date['fecha']->getTimestamp());;
         }
-
-        foreach ($dates as $index => $date){
+        foreach ($dates as $index => $date) {
             $result[] = $date;
         }
         $format = array_unique($result);
-        $result = $serializer->serialize($format, 'json',self::IGNORED_ATTRIBUTES );
+        $result = $serializer->serialize(array_values($format), 'json', self::IGNORED_ATTRIBUTES);
         $response = new Response($result, 200, ['Content-Type' => 'application/json']);
         return $response;
     }
+
     /**
      * @Route("/new", name="tbl_perdida_new", methods={"GET","POST"})
      */

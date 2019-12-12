@@ -50,15 +50,14 @@ class TblPedidoController extends AbstractController
     public function getDates(TblPedidoRepository $tblPedidoRepository, SerializerInterface $serializer): Response
     {
         $dates = [];
-        foreach ($tblPedidoRepository->findDates() as $date){
+        foreach ($tblPedidoRepository->findDates() as $date) {
             $dates[] = date("M Y", $date['fechaPedido']->getTimestamp());;
         }
-
-        foreach ($dates as $index => $date){
-                $result[] = $date;
+        foreach ($dates as $index => $date) {
+            $result[] = $date;
         }
         $format = array_unique($result);
-        $result = $serializer->serialize($format, 'json',self::IGNORED_ATTRIBUTES );
+        $result = $serializer->serialize(array_values($format), 'json', self::IGNORED_ATTRIBUTES);
         $response = new Response($result, 200, ['Content-Type' => 'application/json']);
         return $response;
     }
