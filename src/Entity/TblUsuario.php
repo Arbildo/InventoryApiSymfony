@@ -3,14 +3,17 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TblUsuarioRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * TblUsuario
  *
- * @ORM\Table(name="tbl_usuario", indexes={@ORM\Index(name="ID_CARGO", columns={"ID_CARGO"})})
- * @ORM\Entity
+ * @ORM\Table(name="tbl_usuario")
+ * @ORM\Entity(repositoryClass=TblUsuarioRepository::class)
+ *
  */
-class TblUsuario
+class TblUsuario implements UserInterface
 {
     /**
      * @var int
@@ -63,15 +66,9 @@ class TblUsuario
      */
     private $correo;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="FOTO", type="string", length=200, nullable=false)
-     */
-    private $foto;
 
     /**
-     * @var \TblUsuarioEstado
+     * @var TblUsuarioEstado
      *
      * @ORM\ManyToOne(targetEntity="TblUsuarioEstado")
      * @ORM\JoinColumns({
@@ -81,7 +78,7 @@ class TblUsuario
     private $estado;
 
     /**
-     * @var \TblCargo
+     * @var TblCargo
      *
      * @ORM\ManyToOne(targetEntity="TblCargo")
      * @ORM\JoinColumns({
@@ -167,18 +164,6 @@ class TblUsuario
         return $this;
     }
 
-    public function getFoto(): ?string
-    {
-        return $this->foto;
-    }
-
-    public function setFoto(string $foto): self
-    {
-        $this->foto = $foto;
-
-        return $this;
-    }
-
     public function getEstado(): ?TblUsuarioEstado
     {
         return $this->estado;
@@ -203,4 +188,24 @@ class TblUsuario
     }
 
 
+    public function getRoles()
+    {
+        $roles[] = 'Foo';
+        return array_unique($roles);
+    }
+
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    public function getUsername()
+    {
+        return $this->correo;
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
 }

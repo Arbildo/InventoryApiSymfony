@@ -1,39 +1,46 @@
 security:
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
-    providers:
-#        entity_provider:
-#            entity:
-#                class: App\Entity\TblCliente
-#                property: correo
-#        jwt:
-#            lexik_jwt:
-#                class:  App\Controller\AuthController
-        in_memory: { memory: null }
-    firewalls:
-        login:
-            stateless: true
-            anonymous: true
-            security: false
-            json_login:
-                username_path: correo
-                check_path:               /auth/login
-                success_handler:          lexik_jwt_authentication.handler.authentication_success
-                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
-                require_previous_session: false
-#        dev:
-#            pattern: ^/(_(profiler|wdt)|css|images|js)/
-#            security: false
-#        main:
-#            anonymous: true
+  # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#firewalls-authentication
+  providers:
+    users:
+      entity:
+        class: App\Entity\TblUsuario
+        property: correo
+  encoders:
+    App\Entity\TblUsuario:
+      algorithm: plaintext
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    api:
+      pattern: ^/auth/login/info
+      stateless: true
+      provider: users
+      guard:
+        authenticators:
+          - lexik_jwt_authentication.jwt_token_authenticator
+    tbl:
+      pattern: ^/tbl
+      stateless: true
+      provider: users
+      anonymous: false
+      guard:
+        authenticators:
+          - lexik_jwt_authentication.jwt_token_authenticator
+    login:
+      pattern: ^/auth/login
+      stateless: true
+      anonymous: true
+      provider: users
+      json_login:
+        check_path: /auth/login
+        password_path: password
+        success_handler: lexik_jwt_authentication.handler.authentication_success
+        failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
-    access_control:
-#        - { path: ^/auth/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        # - { path: ^/profile, roles: ROLE_USER }
+  access_control:
+    - { path: ^/auth/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/auth/login/info, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/tbl/, roles: IS_AUTHENTICATED_FULLY }

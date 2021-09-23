@@ -17,22 +17,30 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class AuthController extends AbstractController
 {
-    const IGNORED_VALUES = ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__', 'usuario', 'password']];
-    const ACTIVE_USER = 1;
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/login/info", name="login_info", methods={"GET"})
      */
-    public function login(Request $request, SerializerInterface $serializer)
+    public function login_check(Request $request): Response
     {
-        $request = $request->getContent();
-        $data = json_decode($request,true);
-        $data['estado'] = self::ACTIVE_USER;
-        $em             = $this->getDoctrine()->getManager();
-        $usuarioRepository    = $em->getRepository(TblUsuario::class);
-        $userInfo = $usuarioRepository->findOneBy($data);
-        $result = $serializer->serialize($userInfo, 'json', self::IGNORED_VALUES);
-        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
-        return $response;
+        $user = $this->getUser();
+        return $this->json([
+            'username' => $user->getCorreo(),
+            'roles' => $user->getRoles(),
+        ]);
     }
+
+
+//    public function login(Request $request, SerializerInterface $serializer)
+//    {
+//        $request = $request->getContent();
+//        $data = json_decode($request,true);
+//        $data['estado'] = self::ACTIVE_USER;
+//        $em             = $this->getDoctrine()->getManager();
+//        $usuarioRepository    = $em->getRepository(TblUsuario::class);
+//        $userInfo = $usuarioRepository->findOneBy($data);
+//        $result = $serializer->serialize($userInfo, 'json', self::IGNORED_VALUES);
+//        $response = new Response($result, 200,['Content-Type'=> 'application/json'] );
+//        return $response;
+//    }
 }
