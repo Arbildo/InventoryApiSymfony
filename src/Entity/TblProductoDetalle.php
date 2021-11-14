@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TblProductoDetalle
  *
- * @ORM\Table(name="tbl_producto_detalle", indexes={@ORM\Index(name="ID_LOTE", columns={"ID_LOTE"}), @ORM\Index(name="id_producto", columns={"ID_PRODUCTO"}), @ORM\Index(name="fk_estado_id", columns={"estado"})})
+ * @ORM\Table(name="tbl_producto_detalle", indexes={@ORM\Index(name="fk_estado_id", columns={"estado"}), @ORM\Index(name="id_producto", columns={"ID_PRODUCTO"})})
  * @ORM\Entity
  */
 class TblProductoDetalle
@@ -45,22 +45,22 @@ class TblProductoDetalle
     /**
      * @var int|null
      *
-     * @ORM\Column(name="STOCK_ACTUAL", type="integer", nullable=true)
+     * @ORM\Column(name="STOCK_ACTUAL", type="integer", nullable=true, options={"default"="NULL"})
      */
-    private $stockActual;
+    private $stockActual = 'NULL';
 
     /**
-     * @var \TblProductoDetalleEstado
+     * @var TblProductoDetalleEstado
      *
      * @ORM\ManyToOne(targetEntity="TblProductoDetalleEstado")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="estado", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="estado", referencedColumnName="ID")
      * })
      */
     private $estado;
 
     /**
-     * @var \TblProducto
+     * @var TblProducto
      *
      * @ORM\ManyToOne(targetEntity="TblProducto")
      * @ORM\JoinColumns({
@@ -68,16 +68,6 @@ class TblProductoDetalle
      * })
      */
     private $idProducto;
-
-    /**
-     * @var \TblLote
-     *
-     * @ORM\ManyToOne(targetEntity="TblLote")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_LOTE", referencedColumnName="ID_LOTE")
-     * })
-     */
-    private $idLote;
 
     public function getIdProductoDetalle(): ?int
     {
@@ -152,18 +142,6 @@ class TblProductoDetalle
     public function setIdProducto(?TblProducto $idProducto): self
     {
         $this->idProducto = $idProducto;
-
-        return $this;
-    }
-
-    public function getIdLote(): ?TblLote
-    {
-        return $this->idLote;
-    }
-
-    public function setIdLote(?TblLote $idLote): self
-    {
-        $this->idLote = $idLote;
 
         return $this;
     }

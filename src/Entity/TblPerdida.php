@@ -24,9 +24,16 @@ class TblPerdida
     /**
      * @var string|null
      *
-     * @ORM\Column(name="CODIGO", type="string", length=50, nullable=true)
+     * @ORM\Column(name="CODIGO", type="string", length=50, nullable=true, options={"default"="NULL"})
      */
-    private $codigo;
+    private $codigo = 'NULL';
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="FECHA", type="datetime", nullable=true, options={"default"="NULL"})
+     */
+    private $fecha = 'NULL';
 
     /**
      * @var int
@@ -34,13 +41,6 @@ class TblPerdida
      * @ORM\Column(name="CANTIDAD", type="integer", nullable=false)
      */
     private $cantidad;
-
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="FECHA", type="datetime", nullable=true)
-     */
-    private $fecha;
 
     /**
      * @var string
@@ -86,12 +86,12 @@ class TblPerdida
         return $this;
     }
 
-    public function getFecha(): String
+    public function getFecha(): ?\DateTimeInterface
     {
-        return date("F jS, Y, H:i", $this->fecha->getTimestamp());
+        return $this->fecha;
     }
 
-    public function setFecha(\DateTimeInterface $fecha): self
+    public function setFecha(?\DateTimeInterface $fecha): self
     {
         $this->fecha = $fecha;
 

@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\TblLote;
-use App\Entity\TblProducto;
 use App\Entity\TblProductoDetalle;
 use App\Entity\TblProductoDetalleEstado;
 use App\Form\TblProductoDetalleType;
@@ -14,9 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -85,13 +80,10 @@ class TblProductoDetalleController extends AbstractController
 
         $request                =   json_decode($request->getContent(),true);
         $estado                 = $request['estado'];
-        $lote                   = $request['idLote'];
         $request['idProducto']  = $tblProductoDetalle->getIdProducto()->getIdProducto();
         $em                 = $this->getDoctrine()->getManager();
-        $lote               = $em->find(TblLote::class, $lote);
         $estado             = $em->find(TblProductoDetalleEstado::class, $estado);
         $tblProductoDetalle->setEstado($estado);
-        $tblProductoDetalle->setIdLote($lote);
         $form = $this->createForm(TblProductoDetalleType::class, $tblProductoDetalle);
         $form->submit($request);
         $em->persist($tblProductoDetalle);

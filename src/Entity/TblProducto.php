@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TblProducto
  *
- * @ORM\Table(name="tbl_producto", indexes={@ORM\Index(name="ID_UNIDAD", columns={"ID_UNIDAD"}), @ORM\Index(name="ID_CLASE", columns={"ID_TIPO"})})
+ * @ORM\Table(name="tbl_producto", indexes={@ORM\Index(name="ID_UNIDAD", columns={"ID_UNIDAD"}), @ORM\Index(name="tbl_producto_ibfk_3", columns={"ID_ESTADO"}), @ORM\Index(name="ID_CLASE", columns={"ID_TIPO"})})
  * @ORM\Entity
  */
 class TblProducto
@@ -43,17 +43,7 @@ class TblProducto
     private $descripcion;
 
     /**
-     * @var \TblProductoEstado
-     *
-     * @ORM\ManyToOne(targetEntity="TblProductoEstado")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_ESTADO", referencedColumnName="ID_ESTADO", nullable=false)
-     * })
-     */
-    private $estado;
-
-    /**
-     * @var \TblTipoProducto
+     * @var TblTipoProducto
      *
      * @ORM\ManyToOne(targetEntity="TblTipoProducto")
      * @ORM\JoinColumns({
@@ -63,7 +53,7 @@ class TblProducto
     private $idTipo;
 
     /**
-     * @var \TblUnidadMedida
+     * @var TblUnidadMedida
      *
      * @ORM\ManyToOne(targetEntity="TblUnidadMedida")
      * @ORM\JoinColumns({
@@ -71,6 +61,16 @@ class TblProducto
      * })
      */
     private $idUnidad;
+
+    /**
+     * @var TblProductoEstado
+     *
+     * @ORM\ManyToOne(targetEntity="TblProductoEstado")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_ESTADO", referencedColumnName="ID_ESTADO")
+     * })
+     */
+    private $estado;
 
     public function getIdProducto(): ?int
     {
@@ -113,18 +113,6 @@ class TblProducto
         return $this;
     }
 
-    public function getEstado(): ?TblProductoEstado
-    {
-        return $this->estado;
-    }
-
-    public function setEstado(?TblProductoEstado $estado): self
-    {
-        $this->estado = $estado;
-
-        return $this;
-    }
-
     public function getIdTipo(): ?TblTipoProducto
     {
         return $this->idTipo;
@@ -145,6 +133,18 @@ class TblProducto
     public function setIdUnidad(?TblUnidadMedida $idUnidad): self
     {
         $this->idUnidad = $idUnidad;
+
+        return $this;
+    }
+
+    public function getEstado(): ?TblProductoEstado
+    {
+        return $this->estado;
+    }
+
+    public function setEstado(?TblProductoEstado $estado): self
+    {
+        $this->estado = $estado;
 
         return $this;
     }

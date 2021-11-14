@@ -8,11 +8,7 @@ use App\Repository\TblClienteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\EventListener\ValidateRequestListener;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -29,8 +25,7 @@ class TblClienteController extends AbstractController
         parse_str($request->getQueryString(), $array);
         $result = $serializer->serialize($tblClienteRepository->findBy($array), 'json',
             ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
-        $response = new Response($result, 200,self::HEADERS );
-        return $response;
+        return new Response($result, 200,self::HEADERS );
     }
 
     /**

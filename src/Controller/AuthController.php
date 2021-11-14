@@ -2,15 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\TblUsuario;
-use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\EventListener\ValidateRequestListener;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/auth", name="auth")
@@ -24,6 +19,7 @@ class AuthController extends AbstractController
     public function login_check(Request $request): Response
     {
         $user = $this->getUser();
+
         return $this->json([
             'username' => $user->getCorreo(),
             'roles' => $user->getRoles(),

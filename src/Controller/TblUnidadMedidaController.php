@@ -9,20 +9,30 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Route("/tbl/unidad/medida")
  */
 class TblUnidadMedidaController extends AbstractController
 {
+    const HEADERS = ['Content-Type'=> 'application/json'];
+
     /**
-     * @Route("/", name="tbl_unidad_medida_index", methods={"GET"})
+     * @Route("", name="tbl_unidad_medida_index", methods={"GET"})
      */
-    public function index(TblUnidadMedidaRepository $tblUnidadMedidaRepository): Response
+    public function index(Request $request, TblUnidadMedidaRepository $tblUnidadMedidaRepository): Response
     {
-        return $this->render('tbl_unidad_medida/index.html.twig', [
-            'tbl_unidad_medidas' => $tblUnidadMedidaRepository->findAll(),
-        ]);
+        parse_str($request->getQueryString(), $array);
+        $encoders = [new JsonEncoder()];
+        $normalizers = new ObjectNormalizer();
+        $normalizers->setIgnoredAttributes(["__initializer__", "__cloner__", "__isInitialized__"]);
+        $serializer = new Serializer([$normalizers], $encoders);
+        $result = $serializer->serialize($tblUnidadMedidaRepository->findBy($array), 'json');
+        return new Response($result, 200,self::HEADERS );
+
     }
 
     /**

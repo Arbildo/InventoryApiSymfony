@@ -5,32 +5,32 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * TblProductoEstado
+ * TblVentaEstado
  *
- * @ORM\Table(name="tbl_producto_estado")
+ * @ORM\Table(name="tbl_venta_estado")
  * @ORM\Entity
  */
-class TblProductoEstado
+class TblVentaEstado
 {
     /**
-     * @var int
+     * @var bool
      *
-     * @ORM\Column(name="ID_ESTADO", type="integer", nullable=false)
+     * @ORM\Column(name="ID", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idEstado;
+    private $id;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="ESTADO", type="string", length=10, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="ESTADO", type="string", length=15, nullable=true, options={"default"="NULL"})
      */
     private $estado = 'NULL';
 
-    public function getIdEstado(): ?int
+    public function getId(): ?int
     {
-        return $this->idEstado;
+        return $this->id;
     }
 
     public function getEstado(): ?string

@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * TblUsuario
+ * TblUsuarioEstado
  *
  * @ORM\Table(name="tbl_usuario_estado")
  * @ORM\Entity
@@ -22,44 +22,28 @@ class TblUsuarioEstado
     private $idEstado;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column(name="ESTADO", type="string", nullable=false)
+     * @ORM\Column(name="ESTADO", type="string", length=15, nullable=true, options={"default"="NULL"})
      */
-    private $estado;
+    private $estado = 'NULL';
 
-    /**
-     * @return int
-     */
-    public function getIdEstado(): int
+    public function getIdEstado(): ?int
     {
         return $this->idEstado;
     }
 
-    /**
-     * @param int $idEstado
-     */
-    public function setIdEstado(int $idEstado): void
-    {
-        $this->idEstado = $idEstado;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEstado(): string
+    public function getEstado(): ?string
     {
         return $this->estado;
     }
 
-    /**
-     * @param int $estado
-     */
-    public function setEstado(int $estado): void
+    public function setEstado(?string $estado): self
     {
         $this->estado = $estado;
-    }
 
+        return $this;
+    }
 
 
 }

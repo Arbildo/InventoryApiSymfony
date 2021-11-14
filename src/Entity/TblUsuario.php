@@ -190,7 +190,7 @@ class TblUsuario implements UserInterface
 
     public function getRoles()
     {
-        $roles[] = 'Foo';
+        $roles[] = $this->idCargo->getNombre();
         return array_unique($roles);
     }
 
@@ -207,5 +207,17 @@ class TblUsuario implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getIdCargo(): ?TblCargo
+    {
+        return $this->idCargo;
+    }
+
+    public function setIdCargo(?TblCargo $idCargo): self
+    {
+        $this->idCargo = $idCargo;
+
+        return $this;
     }
 }
