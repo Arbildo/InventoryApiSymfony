@@ -67,7 +67,6 @@ class TblVenta
     private $estado;
 
 
-
     public function getIdVenta(): ?int
     {
         return $this->idVenta;

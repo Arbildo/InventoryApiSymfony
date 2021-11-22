@@ -25,16 +25,23 @@ use Symfony\Component\Serializer\SerializerInterface;
 class TblVentaController extends AbstractController
 {
     const HEADERS = ['Content-Type'=> 'application/json'];
+    const FORMAT_DATE = 'Y-m-d H:i:s';
+    const IGNORED_ATTRIBUTES =  ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']];
 
     /**
      * @Route("/", name="tbl_venta_index", methods={"GET"})
      */
-    public function index(Request  $request, TblVentaRepository $tblVentaRepository, SerializerInterface $serializer): Response
+    public function index(Request  $request,  SerializerInterface $serializer): Response
     {
         parse_str($request->getQueryString(), $array);
-        $result = $serializer->serialize($tblVentaRepository->findBy($array), 'json',
-            ['ignored_attributes' => ['__initializer__','__cloner__','__isInitialized__']]);
-        return new Response($result, 200,self::HEADERS );
+        $em = $this->getDoctrine()->getManager();
+        $pedidoRepository = $em->getRepository(TblVenta::class);
+        $pedidos = $pedidoRepository->findAll();
+//
+//        $result = $serializer->serialize($tblVentaRepository->findBy($array), 'json',
+//            self::IGNORED_ATTRIBUTES);
+        return $this->json($pedidos);
+        return new JsonResponse($pedidos, 200);
     }
 
     /**
@@ -78,14 +85,56 @@ class TblVentaController extends AbstractController
         }
         return new JsonResponse($data, 200);
     }
+    /**
+     * @Route("/fechas", name="tbl_venta_dates", methods={"GET"})
+     */
+    public function getDates(TblVentaRepository $tblVentaRepository, SerializerInterface $serializer): Response
+    {
+        $dates = [];
+        foreach ($tblVentaRepository->findDates() as $date) {
+            $dates[] = date("M Y", $date['fechaPago']->getTimestamp());;
+        }
+        foreach ($dates as $index => $date) {
+            $result[] = $date;
+        }
+        $format = array_unique($result);
+        $result = $serializer->serialize(array_values($format), 'json', self::IGNORED_ATTRIBUTES);
+        $response = new Response($result, 200, ['Content-Type' => 'application/json']);
+        return $response;
+    }
+
 
     /**
      * @Route("/{idVenta}", name="tbl_venta_show", methods={"GET"})
      */
-    public function show(TblVenta $tblVentum): Response
+    public function show(int $idVenta): Response
     {
-        return new JsonResponse($tblVentum, 200);
+        $em = $this->getDoctrine();
+        $venta = $em->getRepository(TblVenta::class)->find($idVenta);
+        $detallesVenta = $em->getRepository(TblVentaDetalleProducto::class)
+            ->findBy(['idVenta' => $idVenta]);
+        $cliente = $em->getRepository(TblCliente::class)->find($venta->getIdCliente());
+        $usuario = $em->getRepository(TblUsuario::class)->find($venta->getIdUsuario());
 
+        $detallesDeVenta = [];
+        foreach ($detallesVenta as $detalle){
+            $detallesDeVenta[] = [
+                'id' => $detalle->getId(),
+                'cantidad' => $detalle->getCantidad(),
+                'producto' => $detalle->getIdProductoDetalle()->getIdProducto()->getNombre(),
+                'precio' => $detalle->getIdProductoDetalle()->getPrecio()
+            ];
+        }
+        $result = [
+            "id" => $venta->getIdVenta(),
+            "cliente" => $cliente->getNombre(),
+            "usuario" => $usuario->getNombres(),
+            "fechaVenta" => $venta->getFechaVenta()->format(self::FORMAT_DATE),
+            "fechaPago" => $venta->getFechaPago()->format(self::FORMAT_DATE),
+            "estado" => $venta->getEstado()->getEstado(),
+            'detalle' => $detallesDeVenta
+        ];
+        return new JsonResponse($result, 200);
     }
 
     /**
@@ -121,4 +170,6 @@ class TblVentaController extends AbstractController
 
         return $this->redirectToRoute('tbl_venta_index');
     }
+
+
 }

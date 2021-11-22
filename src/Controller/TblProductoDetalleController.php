@@ -51,7 +51,6 @@ class TblProductoDetalleController extends AbstractController
         $data            = json_decode($request->getContent(),true);
         $em                 = $this->getDoctrine()->getManager();
         $tblProductoDetalle        = new TblProductoDetalle();
-
         $form = $this->createForm(TblProductoDetalleType::class, $tblProductoDetalle);
         $form->submit($data);
         $em->persist($tblProductoDetalle);
@@ -75,21 +74,22 @@ class TblProductoDetalleController extends AbstractController
     /**
      * @Route("/{idProductoDetalle}/edit", name="tbl_producto_detalle_edit", methods={"PUT"})
      */
-    public function edit(Request $request, TblProductoDetalle $tblProductoDetalle ): Response
+    public function edit(Request $request, int $idProductoDetalle): Response
     {
-
-        $request                =   json_decode($request->getContent(),true);
-        $estado                 = $request['estado'];
-        $request['idProducto']  = $tblProductoDetalle->getIdProducto()->getIdProducto();
         $em                 = $this->getDoctrine()->getManager();
-        $estado             = $em->find(TblProductoDetalleEstado::class, $estado);
-        $tblProductoDetalle->setEstado($estado);
-        $form = $this->createForm(TblProductoDetalleType::class, $tblProductoDetalle);
-        $form->submit($request);
-        $em->persist($tblProductoDetalle);
+        $request                =   json_decode($request->getContent(),true);
+        $productoDetalle = $em->getRepository(TblProductoDetalle::class)->find($idProductoDetalle);
+        $estado                 = $em->find(TblProductoDetalleEstado::class, $request['estado']);
+
+        $productoDetalle->setStockActual($request['stockActual']);
+        $productoDetalle->setStockInicial($request['stockInicial']);
+        $productoDetalle->setStockMinimo($request['stockMinimo']);
+        $productoDetalle->setPrecio($request['precio']);
+        $productoDetalle->setEstado($estado);
+
+        $em->persist($productoDetalle);
         $em->flush();
-        $response = new JsonResponse(['ProductDetail' => $tblProductoDetalle->getIdProductoDetalle()], 200);
-        return $response;
+        return new JsonResponse(['ProductDetail' => $productoDetalle->getIdProductoDetalle()], 200);
     }
 
     /**

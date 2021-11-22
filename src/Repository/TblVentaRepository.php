@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\TblVenta;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -18,7 +19,37 @@ class TblVentaRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TblVenta::class);
     }
+    public function findByMonthYear($year, $month)
+    {
+        $fromTime = new DateTime($year . '-' . $month . '-01');
+        $toTime = new DateTime($fromTime->format('Y-m-d'). ' first day of next month');
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.fechaPedido >= :fromTime')
+            ->andWhere('p.fechaPedido < :toTime')
+            ->setParameter('fromTime', $fromTime)
+            ->setParameter('toTime', $toTime);
+        return $qb->getQuery()->execute();
+    }
 
+    public function findDates()
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p.fechaPago');
+        return $qb->getQuery()->execute();
+    }
+
+    public function findByMonthYearUnixTime($unixTime)
+    {
+        $fromTime = new DateTime($unixTime);
+        $toTime = new DateTime($fromTime->format('Y-m-d H:i:s'). ' first day of next month');
+
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.fechaPedido >= :fromTime')
+            ->andWhere('p.fechaPedido < :toTime')
+            ->setParameter('fromTime', $fromTime)
+            ->setParameter('toTime', $toTime);
+        return $qb->getQuery()->execute();
+    }
 
     // /**
     //  * @return TblProducto[] Returns an array of TblProducto objects
